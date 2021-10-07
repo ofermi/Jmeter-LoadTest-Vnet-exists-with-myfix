@@ -92,12 +92,12 @@ variable "JMETER_EXTRA_CLI_ARGUMENTS" {
   type    = string
   default = ""
 }
-variable "JMETER_TAG_NAME" {
-  type    = string
-  default = "Application"
-}
-variable "JMETER_TAG_VALUE" {
+variable "JMETER_TAG_APPLICATION" {
   type    = string
   default = "LoadTest"
+}
+variable "JMETER_TAG_ENVIRONMENT" {
+  type    = string
+  default = "STG"
 }
 
