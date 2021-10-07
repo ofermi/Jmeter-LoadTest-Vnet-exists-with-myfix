@@ -11,19 +11,18 @@ resource "azurerm_resource_group" "jmeter_rg" {
   name     = var.RESOURCE_GROUP_NAME
   location = var.LOCATION
 
-   tags = {
-    name = "Application"
-    value = "LoadTest"
+  tags = {
+    Application = var.JMETER_TAG_APPLICATION
+    Environment= var.JMETER_TAG_ENVIRONMENT
   }
+}
 
-
- 
 resource "azurerm_virtual_network" "jmeter_vnet" {
   name                = "${var.PREFIX}vnet"
   location            = azurerm_resource_group.jmeter_rg.location
   resource_group_name = azurerm_resource_group.jmeter_rg.name
   address_space       = ["${var.VNET_ADDRESS_SPACE}"]
-     tags = {
+    tags = {
     Application = var.JMETER_TAG_APPLICATION
     Environment= var.JMETER_TAG_ENVIRONMENT
   }
@@ -45,7 +44,6 @@ resource "azurerm_subnet" "jmeter_subnet" {
   }
 
   service_endpoints = ["Microsoft.Storage"]
-
 }
 
 resource "azurerm_network_profile" "jmeter_net_profile" {
@@ -89,7 +87,6 @@ resource "azurerm_storage_share" "jmeter_share" {
   name                 = "jmeter"
   storage_account_name = azurerm_storage_account.jmeter_storage.name
   quota                = var.JMETER_STORAGE_QUOTA_GIGABYTES
- 
 }
 
 resource "azurerm_container_group" "jmeter_workers" {
@@ -135,8 +132,7 @@ resource "azurerm_container_group" "jmeter_workers" {
       "cp -r /jmeter/* .; /entrypoint.sh -s -J server.rmi.ssl.disable=true",
     ]
   }
-
- tags = {
+     tags = {
     Application = var.JMETER_TAG_APPLICATION
     Environment= var.JMETER_TAG_ENVIRONMENT
   }
@@ -186,9 +182,8 @@ resource "azurerm_container_group" "jmeter_controller" {
       "cd /jmeter; /entrypoint.sh -n -J server.rmi.ssl.disable=true -t ${var.JMETER_JMX_FILE} -l ${var.JMETER_RESULTS_FILE} -e -o ${var.JMETER_DASHBOARD_FOLDER} -R ${join(",", "${azurerm_container_group.jmeter_workers.*.ip_address}")} ${var.JMETER_EXTRA_CLI_ARGUMENTS}",
     ]
   }
-      tags = {
-        Application = var.JMETER_TAG_APPLICATION
-        Environment= var.JMETER_TAG_ENVIRONMENT
-        }
-
+     tags = {
+    Application = var.JMETER_TAG_APPLICATION
+    Environment= var.JMETER_TAG_ENVIRONMENT
+  }
 }
