@@ -137,10 +137,7 @@ resource "azurerm_container_group" "jmeter_workers" {
       "cp -r /jmeter/* .; /entrypoint.sh -s -J server.rmi.ssl.disable=true",
     ]
   }
-    tags = {
-        name = var.JMETER_TAG_NAME
-        value = var.JMETER_TAG_VALUE
-        }
+
 
 }
 
