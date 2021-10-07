@@ -12,9 +12,9 @@ resource "azurerm_resource_group" "jmeter_rg" {
   location = var.LOCATION
 
    tags = {
-    name = "Application"
-    value = "LoadTest"
-  }
+   Application ="LoadTest"
+   environment = "STG"
+     }
 
 
 resource "azurerm_virtual_network" "jmeter_vnet" {
@@ -22,10 +22,10 @@ resource "azurerm_virtual_network" "jmeter_vnet" {
   location            = azurerm_resource_group.jmeter_rg.location
   resource_group_name = azurerm_resource_group.jmeter_rg.name
   address_space       = ["${var.VNET_ADDRESS_SPACE}"]
-     tags = {
-    name = var.JMETER_TAG_NAME
-    value = var.JMETER_TAG_VALUE
-  }
+   tags = {
+   Application ="LoadTest"
+   environment = "STG"
+     }
 }
 
 resource "azurerm_subnet" "jmeter_subnet" {
@@ -60,9 +60,10 @@ resource "azurerm_network_profile" "jmeter_net_profile" {
       subnet_id = azurerm_subnet.jmeter_subnet.id
     }
   }
-     tags = {
-    name = var.JMETER_TAG_NAME
-    value = var.JMETER_TAG_VALUE
+   tags = {
+   Application ="LoadTest"
+   environment = "STG"
+     }
   }
 }
 
@@ -78,9 +79,10 @@ resource "azurerm_storage_account" "jmeter_storage" {
     default_action             = "Allow"
     virtual_network_subnet_ids = ["${azurerm_subnet.jmeter_subnet.id}"]
   }
-     tags = {
-    name = var.JMETER_TAG_NAME
-    value = var.JMETER_TAG_VALUE
+   tags = {
+   Application ="LoadTest"
+   environment = "STG"
+     }
   }
 }
 
@@ -135,10 +137,10 @@ resource "azurerm_container_group" "jmeter_workers" {
     ]
   }
 
- tags = {
-    name = var.JMETER_TAG_NAME
-    value = var.JMETER_TAG_VALUE
-  }
+  tags = {
+   Application ="LoadTest"
+   environment = "STG"
+     }
 }
 
 resource "azurerm_container_group" "jmeter_controller" {
@@ -185,9 +187,9 @@ resource "azurerm_container_group" "jmeter_controller" {
       "cd /jmeter; /entrypoint.sh -n -J server.rmi.ssl.disable=true -t ${var.JMETER_JMX_FILE} -l ${var.JMETER_RESULTS_FILE} -e -o ${var.JMETER_DASHBOARD_FOLDER} -R ${join(",", "${azurerm_container_group.jmeter_workers.*.ip_address}")} ${var.JMETER_EXTRA_CLI_ARGUMENTS}",
     ]
   }
-      tags = {
-        name = var.JMETER_TAG_NAME
-        value = var.JMETER_TAG_VALUE
-        }
+     tags = {
+   Application ="LoadTest"
+   environment = "STG"
+     }
 
 }
