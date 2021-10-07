@@ -88,10 +88,7 @@ resource "azurerm_storage_share" "jmeter_share" {
   name                 = "jmeter"
   storage_account_name = azurerm_storage_account.jmeter_storage.name
   quota                = var.JMETER_STORAGE_QUOTA_GIGABYTES
- tags = {
-    name = var.JMETER_TAG_NAME
-    value = var.JMETER_TAG_VALUE
-  }
+ 
 }
 
 resource "azurerm_container_group" "jmeter_workers" {
@@ -138,7 +135,10 @@ resource "azurerm_container_group" "jmeter_workers" {
     ]
   }
 
-
+ tags = {
+    name = var.JMETER_TAG_NAME
+    value = var.JMETER_TAG_VALUE
+  }
 }
 
 resource "azurerm_container_group" "jmeter_controller" {
