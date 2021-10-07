@@ -12,20 +12,21 @@ resource "azurerm_resource_group" "jmeter_rg" {
   location = var.LOCATION
 
    tags = {
-   Application ="LoadTest"
-   environment = "STG"
-     }
+    name = "Application"
+    value = "LoadTest"
+  }
 
 
+ 
 resource "azurerm_virtual_network" "jmeter_vnet" {
   name                = "${var.PREFIX}vnet"
   location            = azurerm_resource_group.jmeter_rg.location
   resource_group_name = azurerm_resource_group.jmeter_rg.name
   address_space       = ["${var.VNET_ADDRESS_SPACE}"]
-   tags = {
-   Application ="LoadTest"
-   environment = "STG"
-     }
+     tags = {
+    Application = var.JMETER_TAG_APPLICATION
+    Environment= var.JMETER_TAG_ENVIRONMENT
+  }
 }
 
 resource "azurerm_subnet" "jmeter_subnet" {
@@ -60,10 +61,9 @@ resource "azurerm_network_profile" "jmeter_net_profile" {
       subnet_id = azurerm_subnet.jmeter_subnet.id
     }
   }
-   tags = {
-   Application ="LoadTest"
-   environment = "STG"
-     }
+     tags = {
+    Application = var.JMETER_TAG_APPLICATION
+    Environment= var.JMETER_TAG_ENVIRONMENT
   }
 }
 
@@ -79,10 +79,9 @@ resource "azurerm_storage_account" "jmeter_storage" {
     default_action             = "Allow"
     virtual_network_subnet_ids = ["${azurerm_subnet.jmeter_subnet.id}"]
   }
-   tags = {
-   Application ="LoadTest"
-   environment = "STG"
-     }
+     tags = {
+    Application = var.JMETER_TAG_APPLICATION
+    Environment= var.JMETER_TAG_ENVIRONMENT
   }
 }
 
@@ -137,10 +136,10 @@ resource "azurerm_container_group" "jmeter_workers" {
     ]
   }
 
-  tags = {
-   Application ="LoadTest"
-   environment = "STG"
-     }
+ tags = {
+    Application = var.JMETER_TAG_APPLICATION
+    Environment= var.JMETER_TAG_ENVIRONMENT
+  }
 }
 
 resource "azurerm_container_group" "jmeter_controller" {
@@ -187,9 +186,9 @@ resource "azurerm_container_group" "jmeter_controller" {
       "cd /jmeter; /entrypoint.sh -n -J server.rmi.ssl.disable=true -t ${var.JMETER_JMX_FILE} -l ${var.JMETER_RESULTS_FILE} -e -o ${var.JMETER_DASHBOARD_FOLDER} -R ${join(",", "${azurerm_container_group.jmeter_workers.*.ip_address}")} ${var.JMETER_EXTRA_CLI_ARGUMENTS}",
     ]
   }
-     tags = {
-   Application ="LoadTest"
-   environment = "STG"
-     }
+      tags = {
+        Application = var.JMETER_TAG_APPLICATION
+        Environment= var.JMETER_TAG_ENVIRONMENT
+        }
 
 }
