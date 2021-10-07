@@ -12,10 +12,10 @@ resource "azurerm_resource_group" "jmeter_rg" {
   location = var.LOCATION
 
    tags = {
-    name = var.JMETER_TAG_NAME
-    value = var.JMETER_TAG_VALUE
+    name = "Application"
+    value = "LoadTest"
   }
-}
+
 
 resource "azurerm_virtual_network" "jmeter_vnet" {
   name                = "${var.PREFIX}vnet"
