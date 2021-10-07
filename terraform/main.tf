@@ -44,10 +44,7 @@ resource "azurerm_subnet" "jmeter_subnet" {
   }
 
   service_endpoints = ["Microsoft.Storage"]
-   tags = {
-    name = var.JMETER_TAG_NAME
-    value = var.JMETER_TAG_VALUE
-  }
+
 }
 
 resource "azurerm_network_profile" "jmeter_net_profile" {
