@@ -96,7 +96,7 @@ variable "JMETER_TAG_NAME" {
   type    = string
   default = "Application"
 }
-variable "JMETER_TAG_NAME" {
+variable "JMETER_TAG_VALUE" {
   type    = string
   default = "LoadTest"
 }
