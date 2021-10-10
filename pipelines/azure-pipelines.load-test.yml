@@ -23,11 +23,12 @@ steps:
       az acr login -n $(TF_VAR_JMETER_ACR_NAME)
       docker pull $(TF_VAR_JMETER_DOCKER_IMAGE)
 #      docker rm  jmx-validator 
-- script: 
-       docker run --name=jmx-validator -v $(JMETER_DIRECTORY_INPUT):/jmeter -w /jmeter \
+- script: |
+    docker run --name=jmx-validator -v $(JMETER_DIRECTORY_INPUT):/jmeter -w /jmeter \
       --entrypoint "TestPlanCheck.sh" $(TF_VAR_JMETER_DOCKER_IMAGE) \
       --stats --tree-dump --jmx $(TF_VAR_JMETER_JMX_FILE)
   displayName: 'SETUP: Validate JMX File'
+
 
 - task: AzureCLI@2
   displayName: 'SETUP: Prepare Terraform Credentials'
