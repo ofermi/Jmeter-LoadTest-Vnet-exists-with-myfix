@@ -90,7 +90,7 @@ steps:
 
 
 #already downgradaed at the self agent pool 
-- #task: Bash@3
+#- task: Bash@3
   #displayName: 'Change version of Az CLI'
   #inputs:
    # targetType: inline
