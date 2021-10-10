@@ -88,19 +88,23 @@ steps:
       echo "`date`: Finished!"
   displayName: 'TEST: Wait Test Execution'
 
-- task: Bash@3
-  displayName: 'Change version of Az CLI'
-  inputs:
-    targetType: inline
-    script: |
-      sudo apt-get update
-      sudo apt-get install ca-certificates curl apt-transport-https lsb-release gnupg
-      curl -sL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/microsoft.gpg > /dev/null
-      AZ_REPO=$(lsb_release -cs)
-      echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $AZ_REPO main" | sudo tee /etc/apt/sources.list.d/azure-cli.list
-      sudo apt-get update
-      sudo apt-get install --allow-downgrades azure-cli=2.27.2-1~bionic
 
+#already downgradaed at the self agent pool 
+- #task: Bash@3
+  #displayName: 'Change version of Az CLI'
+  #inputs:
+   # targetType: inline
+   # script: |
+   #   sudo apt-get update
+   #  sudo apt-get install ca-certificates curl apt-transport-https lsb-release gnupg
+   #   curl -sL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/microsoft.gpg > /dev/null
+   #   AZ_REPO=$(lsb_release -cs)
+   #   echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $AZ_REPO main" | sudo tee /etc/apt/sources.list.d/azure-cli.list
+   #   sudo apt-get update
+   # have to change following the ubunto version
+   #  sudo apt-get install --allow-downgrades azure-cli=2.27.2-1~bionic
+
+    
 - task: AzureCLI@2
   inputs:
     azureSubscription: $(AZURE_SERVICE_CONNECTION_NAME)
