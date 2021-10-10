@@ -6,8 +6,7 @@ trigger:
     include:
     - docker/*
 
-pool:
-  vmImage: 'ubuntu-latest'
+pool: 'Mamram Linux Self-Agent'
 
 variables:
 - group: JMETER_TERRAFORM_SETTINGS
