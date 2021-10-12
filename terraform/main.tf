@@ -41,8 +41,10 @@ resource "random_id" "random" {
 
 resource "azurerm_subnet" "jmeter_subnet" {
   name                 = "${var.PREFIX}subnet"
-  resource_group_name  = azurerm_resource_group.jmeter_rg.name
-  virtual_network_name = azurerm_virtual_network.jmeter_vnet.name
+  #resource_group_name  = azurerm_resource_group.jmeter_rg.name
+  resource_group_name  = "jmeter"
+  #virtual_network_name = azurerm_virtual_network.jmeter_vnet.name
+  virtual_network_name = "jmetervnet"
   address_prefix       = var.SUBNET_ADDRESS_PREFIX
 
   delegation {
