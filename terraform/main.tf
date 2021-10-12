@@ -3,6 +3,14 @@ data "azurerm_container_registry" "jmeter_acr" {
   resource_group_name = var.JMETER_ACR_RESOURCE_GROUP_NAME
 }
 
+data "azurerm_resource_group" "jmeter_rg" {
+  name     = var.RESOURCE_GROUP_NAME
+  }
+
+data "azurerm_virtual_network" "jmeter_vnet" {
+    name                = "${var.PREFIX}vnet"
+ }
+ 
 resource "random_id" "random" {
   byte_length = 4
 }
@@ -13,12 +21,10 @@ resource "random_id" "random" {
 
  # tags = {
  #   Application = var.JMETER_TAG_APPLICATION
- #  Environment= var.JMETER_TAG_ENVIRONMENT
+ #   Environment= var.JMETER_TAG_ENVIRONMENT
  # }
 #}
-data "azurerm_resource_group" "jmeter_rg" {
-  name     = var.RESOURCE_GROUP_NAME
-  }
+
 #resource "azurerm_virtual_network" "jmeter_vnet" {
 #  name                = "${var.PREFIX}vnet"
 # location            = azurerm_resource_group.jmeter_rg.location
@@ -29,9 +35,7 @@ data "azurerm_resource_group" "jmeter_rg" {
   #  Environment= var.JMETER_TAG_ENVIRONMENT
  # }
 #}
-data "azurerm_virtual_network" "jmeter_vnet" {
-    name                = "${var.PREFIX}vnet"
-}
+
 
 resource "azurerm_subnet" "jmeter_subnet" {
   name                 = "${var.PREFIX}subnet"
