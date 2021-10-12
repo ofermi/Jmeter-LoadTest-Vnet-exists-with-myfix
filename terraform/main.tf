@@ -16,7 +16,9 @@ resource "random_id" "random" {
  #  Environment= var.JMETER_TAG_ENVIRONMENT
  # }
 #}
-
+data "azurerm_resource_group" "jmeter_rg" {
+  name     = var.RESOURCE_GROUP_NAME
+  }
 #resource "azurerm_virtual_network" "jmeter_vnet" {
 #  name                = "${var.PREFIX}vnet"
 # location            = azurerm_resource_group.jmeter_rg.location
@@ -27,6 +29,9 @@ resource "random_id" "random" {
   #  Environment= var.JMETER_TAG_ENVIRONMENT
  # }
 #}
+data "azurerm_virtual_network" "jmeter_vnet" {
+    name                = "${var.PREFIX}vnet"
+}
 
 resource "azurerm_subnet" "jmeter_subnet" {
   name                 = "${var.PREFIX}subnet"
