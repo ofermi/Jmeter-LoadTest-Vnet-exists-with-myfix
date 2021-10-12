@@ -3,15 +3,7 @@ data "azurerm_container_registry" "jmeter_acr" {
   resource_group_name = var.JMETER_ACR_RESOURCE_GROUP_NAME
 }
 
-data "azurerm_resource_group" "jmeter_rg" {
-  #name     = var.RESOURCE_GROUP_NAME
-   name     = "jmeter"
-  }
 
-data "azurerm_virtual_network" "jmeter_vnet" {
-    #name                = "${var.PREFIX}vnet"
-    name= "jmetervnet"
- }
 
 resource "random_id" "random" {
   byte_length = 4
@@ -30,7 +22,7 @@ resource "random_id" "random" {
 #resource "azurerm_virtual_network" "jmeter_vnet" {
 #  name                = "${var.PREFIX}vnet"
 # location            = azurerm_resource_group.jmeter_rg.location
-#  resource_group_name = azurerm_resource_group.jmeter_rg.name
+#  resource_group_name = "jmeter"
 #  address_space       = ["${var.VNET_ADDRESS_SPACE}"]
  #   tags = {
  #   Application = var.JMETER_TAG_APPLICATION
@@ -41,9 +33,8 @@ resource "random_id" "random" {
 
 resource "azurerm_subnet" "jmeter_subnet" {
   name                 = "${var.PREFIX}subnet"
-  #resource_group_name  = azurerm_resource_group.jmeter_rg.name
+  
   resource_group_name  = "jmeter"
-  #virtual_network_name = azurerm_virtual_network.jmeter_vnet.name
   virtual_network_name = "jmetervnet"
   address_prefix       = var.SUBNET_ADDRESS_PREFIX
 
@@ -62,7 +53,7 @@ resource "azurerm_subnet" "jmeter_subnet" {
 resource "azurerm_network_profile" "jmeter_net_profile" {
   name                = "${var.PREFIX}netprofile"
   location            = azurerm_resource_group.jmeter_rg.location
-  resource_group_name = azurerm_resource_group.jmeter_rg.name
+  resource_group_name = "jmeter"
 
   container_network_interface {
     name = "${var.PREFIX}cnic"
@@ -80,7 +71,7 @@ resource "azurerm_network_profile" "jmeter_net_profile" {
 
 resource "azurerm_storage_account" "jmeter_storage" {
   name                = "${var.PREFIX}storage${random_id.random.hex}"
-  resource_group_name = azurerm_resource_group.jmeter_rg.name
+  resource_group_name = "jmeter"
   location            = azurerm_resource_group.jmeter_rg.location
 
   account_tier             = "Standard"
@@ -106,7 +97,7 @@ resource "azurerm_container_group" "jmeter_workers" {
   count               = var.JMETER_WORKERS_COUNT
   name                = "${var.PREFIX}-worker${count.index}"
   location            = azurerm_resource_group.jmeter_rg.location
-  resource_group_name = azurerm_resource_group.jmeter_rg.name
+  resource_group_name = "jmeter"
 
   ip_address_type = "private"
   os_type         = "Linux"
@@ -154,7 +145,7 @@ resource "azurerm_container_group" "jmeter_workers" {
 resource "azurerm_container_group" "jmeter_controller" {
   name                = "${var.PREFIX}-controller"
   location            = azurerm_resource_group.jmeter_rg.location
-  resource_group_name = azurerm_resource_group.jmeter_rg.name
+  resource_group_name = "jmeter"
 
   ip_address_type = "private"
   os_type         = "Linux"
