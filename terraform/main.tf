@@ -4,13 +4,15 @@ data "azurerm_container_registry" "jmeter_acr" {
 }
 
 data "azurerm_resource_group" "jmeter_rg" {
-  name     = var.RESOURCE_GROUP_NAME
+  #name     = var.RESOURCE_GROUP_NAME
+   name     = "jmeter"
   }
 
 data "azurerm_virtual_network" "jmeter_vnet" {
-    name                = "${var.PREFIX}vnet"
+    #name                = "${var.PREFIX}vnet"
+    name= "jmetervnet"
  }
- 
+
 resource "random_id" "random" {
   byte_length = 4
 }
