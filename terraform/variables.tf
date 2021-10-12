@@ -5,7 +5,7 @@ variable "RESOURCE_GROUP_NAME" {
 
 variable "LOCATION" {
   type    = string
-  default = "eastus"
+  default = "westeurope"
 }
 
 variable "PREFIX" {
@@ -20,7 +20,7 @@ variable "VNET_ADDRESS_SPACE" {
 
 variable "SUBNET_ADDRESS_PREFIX" {
   type    = string
-  default = "30.5.1.0/24"
+  default = "30.5.2.0/24"
 }
 
 variable "JMETER_WORKERS_COUNT" {
