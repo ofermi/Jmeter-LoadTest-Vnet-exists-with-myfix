@@ -26,13 +26,26 @@
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
       </ThreadGroup>
       <hashTree>
+        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+          <collectionProp name="HeaderManager.headers">
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">Content-Type</stringProp>
+              <stringProp name="Header.value">application/json</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">Authorization</stringProp>
+              <stringProp name="Header.value">Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Imwzc1EtNTBjQ0g0eEJWWkxIVEd3blNSNzY4MCIsImtpZCI6Imwzc1EtNTBjQ0g0eEJWWkxIVEd3blNSNzY4MCJ9.eyJhdWQiOiJhcGk6Ly9hZDU5ZDU2Yy03MDUzLTRjNzctOWEwYi0wYzRhYTMwZGRiMzgiLCJpc3MiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC83ODgyMDg1Mi01NWZhLTQ1MGItOTA4ZC00NWMwZDkxMWU3NmIvIiwiaWF0IjoxNjM0MDQ0NzU5LCJuYmYiOjE2MzQwNDQ3NTksImV4cCI6MTYzNDA0ODY1OSwiYWlvIjoiRTJaZ1lIaFJ4SEMzeWJIcDVJMCtsWGN6bnU3Z0FBQT0iLCJhcHBpZCI6IjQwMWFmYjc2LTBkOWMtNDVjNi04OWIwLWNmZjg1NDE0YWQ2OCIsImFwcGlkYWNyIjoiMSIsImlkcCI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc4ODIwODUyLTU1ZmEtNDUwYi05MDhkLTQ1YzBkOTExZTc2Yi8iLCJvaWQiOiJiNjc2NTdkOC1iNTEwLTQzYjItYjIwYS1iNjY0Zjk4NmY5MzUiLCJyaCI6IjAuQVRVQVVnaUNlUHBWQzBXUWpVWEEyUkhuYTNiN0drQ2NEY1pGaWJEUC1GUVVyV2cxQUFBLiIsInJvbGVzIjpbIlVzZXJzLlVwbnMuV3JpdGUiLCJVc2Vycy5JZGVudGl0eU51bWJlci5SZWFkIiwiVXNlcnMuVXBucy5SZWFkIiwiVXNlcnMuT2lkcy5Xcml0ZSJdLCJzdWIiOiJiNjc2NTdkOC1iNTEwLTQzYjItYjIwYS1iNjY0Zjk4NmY5MzUiLCJ0aWQiOiI3ODgyMDg1Mi01NWZhLTQ1MGItOTA4ZC00NWMwZDkxMWU3NmIiLCJ1dGkiOiJOWVB5UnQ4RnZVMmRPNzNfNzlzc0FBIiwidmVyIjoiMS4wIn0.NA7Drt8dBN8JmIGZRKPwGB0YJ0f5rppvu8_v4oKVDHZYmkie3juXBBmh5lda_V2DLsE3BXOLxBQ--8VuBfxCc8x9s7aWAbZgP2DQrY5Kz7GUAalQNyWWcRdyNsC_yCxmRsnSQDd04GJS2ilZfezf6OrxrjaMnbf9mAQlsykLHQ4k-1_cJglLP52lHLmQItw-SEfbI2nKIRE70B266iiZOss0lWGrBth5nf1ymC0xmBZ3EyKv-_Oh60AdpLG_bxFqT19Z1gECAPgtQvYJq-Y9iUaUACXXAer1pNhqvqJ6qS_cihlqmQXxdNeoABLWcGWIsHUyJbIPV6R8c17NhXD5zQ</stringProp>
+            </elementProp>
+          </collectionProp>
+        </HeaderManager>
+        <hashTree/>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HTTP Request" enabled="true">
           <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
             <collectionProp name="Arguments.arguments">
               <elementProp name="" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">{&quot;token&quot;:&quot;eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Imwzc1EtNTBjQ0g0eEJWWkxIVEd3blNSNzY4MCJ9.eyJhdWQiOiI0MDFhZmI3Ni0wZDljLTQ1YzYtODliMC1jZmY4NTQxNGFkNjgiLCJpc3MiOiJodHRwczovL2xvZ2luLm1pY3Jvc29mdG9ubGluZS5jb20vNzg4MjA4NTItNTVmYS00NTBiLTkwOGQtNDVjMGQ5MTFlNzZiL3YyLjAiLCJpYXQiOjE2MzQwMzIyNzQsIm5iZiI6MTYzNDAzMjI3NCwiZXhwIjoxNjM0MDM2MTc0LCJhaW8iOiJBVlFBcS84VEFBQUFFbGo0Um5JL3ZmQWVndk90Zk9RTEpnWWNwRkNRMklzQjNmajAvYWNyMWlFM1piaUIySDBwNmJoN25jdTR5S3BreEJQSXlvV1QyY2h4RlQ5aXdZYXEzTXpPTTkzZCswYlJpVE05SGoxSWx6az0iLCJuYW1lIjoidGVzdCBhcGkgNCIsIm5vbmNlIjoiYWU2MTQ4MDMtZDMyZi00ZmEyLTk2NGUtNTIyODRjNzgwOTZmIiwib2lkIjoiOGU3NTFkMzAtZGNmYS00Y2IzLTgxZjktN2ZlNGFmNzFmODFmIiwicHJlZmVycmVkX3VzZXJuYW1lIjoidGVzdF9hcGk0QGlkZi5pbCIsInJoIjoiMC5BVFVBVWdpQ2VQcFZDMFdRalVYQTJSSG5hM2I3R2tDY0RjWkZpYkRQLUZRVXJXZzFBTFkuIiwic3ViIjoib2pFYWVlZHd6dWxJVEhDNzlPWTdycW9TeXEwWkxQcmtSRml5UU1fS1hFOCIsInRpZCI6Ijc4ODIwODUyLTU1ZmEtNDUwYi05MDhkLTQ1YzBkOTExZTc2YiIsInVwbiI6InRlc3RfYXBpNEBpZGYuaWwiLCJ1dGkiOiIzbXkwN1VERVFFQ1RtN3VVU2g4T0FRIiwidmVyIjoiMi4wIn0.gHCovcoKL9ov0LxVt--f6W9VwDTyshXsnvO4VsdCtdga9QQK-AhGb3565FCUQFJbKPlNzR1IWPMPxWFg9qNTgih2B4ekDu1-zpb7PuxRJXIu52UCiSKRChLyM6x5-motfUlEUVvYHkb5HLTnbAcEWaREgwL6KZnGPWvb9R-o2nMPJXf8B4XDvK7tjsQORc1k8qw9clP9zcL3xMxfTr3HyVk_6TA2WCzGuIJLBzYhdUOyDhkV1pxQtWlOKxYv5nH-PYo7hWbH7GX3D-cGzo6faf2QvTvZUYURxyUym2g0HrX-Ho1seBtMCtSAP-XcpA16-Yzbv55arfanh-e9t54hrA&quot;}</stringProp>
+                <stringProp name="Argument.value">{&quot;token&quot;:&quot;eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Imwzc1EtNTBjQ0g0eEJWWkxIVEd3blNSNzY4MCJ9.eyJhdWQiOiI0MDFhZmI3Ni0wZDljLTQ1YzYtODliMC1jZmY4NTQxNGFkNjgiLCJpc3MiOiJodHRwczovL2xvZ2luLm1pY3Jvc29mdG9ubGluZS5jb20vNzg4MjA4NTItNTVmYS00NTBiLTkwOGQtNDVjMGQ5MTFlNzZiL3YyLjAiLCJpYXQiOjE2MzQwNDQ3OTAsIm5iZiI6MTYzNDA0NDc5MCwiZXhwIjoxNjM0MDQ4NjkwLCJhaW8iOiJBVlFBcS84VEFBQUFRWlZ5WUh5alovdXVPSzIydk1XRmRBUnF0WDVabGVuekJQcE9MRi83Q2VNQVlaSzRHQ1hpRXdmU0VUU0VhZFcwemJlTTRUeGdsUnRoUWdkNFpvRTlxRVRLcTZDeHMwbGRMU2N2K29MazkrUT0iLCJuYW1lIjoidGVzdCBhcGkgNCIsIm5vbmNlIjoiYWI0OTJlMDQtZjRiNi00YjE0LTg0ZjItYjg5MWI5YWI5YjRlIiwib2lkIjoiOGU3NTFkMzAtZGNmYS00Y2IzLTgxZjktN2ZlNGFmNzFmODFmIiwicHJlZmVycmVkX3VzZXJuYW1lIjoidGVzdF9hcGk0QGlkZi5pbCIsInJoIjoiMC5BVFVBVWdpQ2VQcFZDMFdRalVYQTJSSG5hM2I3R2tDY0RjWkZpYkRQLUZRVXJXZzFBTFkuIiwic3ViIjoib2pFYWVlZHd6dWxJVEhDNzlPWTdycW9TeXEwWkxQcmtSRml5UU1fS1hFOCIsInRpZCI6Ijc4ODIwODUyLTU1ZmEtNDUwYi05MDhkLTQ1YzBkOTExZTc2YiIsInVwbiI6InRlc3RfYXBpNEBpZGYuaWwiLCJ1dGkiOiJZLVVVV2p0YkZrcUpmMkItdHlFdUFBIiwidmVyIjoiMi4wIn0.rY_E9MBrR_v8n6Kl7SfVUascjTuwZca9SYhGUKTYxme1xAIIIgkjRKrrNVSBUHtU6DA85nmdL-dkrljdl8YSHHsnLyzyigdLYetcBteTMcpChi14yxNbL6Pag0yn22fHP39pu821vTY1p7I6Rn1JkLkaPIOKAFekgVJqKbGQVffsa9nMPoyOSU3kMwcE54dfiuNm7S9mMePiT8dhWQlMmDEThxO3nh5ISAlT606V7CcqyngEzy7GdXok8n1hq6r-ZqksjF3GsdWh-Yx9MitC91OZfwMGpiOtUnP8Pesfff69HU7iyXjQE7-pDYTO16nWUYK79QhLd-DE0t9O4TvIQA&quot;}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
             </collectionProp>
@@ -53,15 +66,6 @@
         </HTTPSamplerProxy>
         <hashTree/>
       </hashTree>
-      <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
-        <collectionProp name="HeaderManager.headers">
-          <elementProp name="" elementType="Header">
-            <stringProp name="Header.name">Authorization</stringProp>
-            <stringProp name="Header.value">Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Imwzc1EtNTBjQ0g0eEJWWkxIVEd3blNSNzY4MCIsImtpZCI6Imwzc1EtNTBjQ0g0eEJWWkxIVEd3blNSNzY4MCJ9.eyJhdWQiOiJhcGk6Ly9hZDU5ZDU2Yy03MDUzLTRjNzctOWEwYi0wYzRhYTMwZGRiMzgiLCJpc3MiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC83ODgyMDg1Mi01NWZhLTQ1MGItOTA4ZC00NWMwZDkxMWU3NmIvIiwiaWF0IjoxNjM0MDMyMjUzLCJuYmYiOjE2MzQwMzIyNTMsImV4cCI6MTYzNDAzNjE1MywiYWlvIjoiRTJaZ1lEZzlYMTllejY1UXJsN3A1Yk5kRy9nbkFBQT0iLCJhcHBpZCI6IjQwMWFmYjc2LTBkOWMtNDVjNi04OWIwLWNmZjg1NDE0YWQ2OCIsImFwcGlkYWNyIjoiMSIsImlkcCI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc4ODIwODUyLTU1ZmEtNDUwYi05MDhkLTQ1YzBkOTExZTc2Yi8iLCJvaWQiOiJiNjc2NTdkOC1iNTEwLTQzYjItYjIwYS1iNjY0Zjk4NmY5MzUiLCJyaCI6IjAuQVRVQVVnaUNlUHBWQzBXUWpVWEEyUkhuYTNiN0drQ2NEY1pGaWJEUC1GUVVyV2cxQUFBLiIsInJvbGVzIjpbIlVzZXJzLlVwbnMuV3JpdGUiLCJVc2Vycy5JZGVudGl0eU51bWJlci5SZWFkIiwiVXNlcnMuVXBucy5SZWFkIiwiVXNlcnMuT2lkcy5Xcml0ZSJdLCJzdWIiOiJiNjc2NTdkOC1iNTEwLTQzYjItYjIwYS1iNjY0Zjk4NmY5MzUiLCJ0aWQiOiI3ODgyMDg1Mi01NWZhLTQ1MGItOTA4ZC00NWMwZDkxMWU3NmIiLCJ1dGkiOiJqc05SajhWQVdVaTJUckFqSktrbUFBIiwidmVyIjoiMS4wIn0.CvNf97b0-gfVcgvuulxPu0LwGG9ibXWguNHs1HX1vve24Oz2p5pDvCq4dgNWqGbr1cDB7eE96xDScaMl4UyJITBBSLia4kJKPTwoqQcqqqdzHrwegN-5NwFwLFwu-JrBUwX8Hj9bfvRg1omecwE4CU36IFlFc4WaC0kyfSsBpw41u0hCmzivLXJ1HnIfhZH9nsqqyOsSN8qn8nTCusTfQBOhDAN5zjGDZDXRWI8E5BajjRPBRYwk8CLBeLrlLgOYPPfe8aXUHeRVzwYPWMGJm-0ofcG-3va9oWrDcjNExq66Oxy_1aoeZShlzOcUiJUjLI1ay-ACUpfkYMtfUEbFTg</stringProp>
-          </elementProp>
-        </collectionProp>
-      </HeaderManager>
-      <hashTree/>
     </hashTree>
   </hashTree>
 </jmeterTestPlan>
