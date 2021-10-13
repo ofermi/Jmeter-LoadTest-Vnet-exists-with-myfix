@@ -8,9 +8,13 @@ data  "azurerm_subnet" "jmeter_subnet" {
  virtual_network_name = "jmetervnet"
 }
 
-output "subnet_id" {
-  value = data.azurerm_subnet.jmeter_subnet.id
+
+data "azurerm_network_profile" "jmeter_net_profile" {
+  name                = "jmeternetprofile"
+  location            = "westeurope"
+  resource_group_name = "jmeter"
 }
+ 
 resource "random_id" "random" {
   byte_length = 4
 }
@@ -108,7 +112,7 @@ resource "azurerm_container_group" "jmeter_workers" {
   ip_address_type = "private"
   os_type         = "Linux"
 
-  network_profile_id = azurerm_network_profile.jmeter_net_profile.id
+  network_profile_id = data.azurerm_network_profile.jmeter_net_profile.id
 
   image_registry_credential {
     server   = data.azurerm_container_registry.jmeter_acr.login_server
