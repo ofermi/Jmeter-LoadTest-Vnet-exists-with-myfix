@@ -139,7 +139,7 @@ resource "azurerm_container_group" "jmeter_workers" {
       "/bin/sh",
       "-c",
       "cp -r /jmeter/* .; /entrypoint.sh -s -J server.rmi.ssl.disable=true",
-      "/entrypoint.sh -s -J java.rmi.server.hostname=10.20.30.40",
+    #  "/entrypoint.sh -s -J java.rmi.server.hostname=10.20.30.40",
     ]
   }
      tags = {
