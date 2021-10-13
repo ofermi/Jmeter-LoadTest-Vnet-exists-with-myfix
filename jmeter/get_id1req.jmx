@@ -1,175 +1,71 @@
-trigger: none
-
-pool: 'Mamram Linux Self-Agent'
-
-variables:
-- group: JMETER_TERRAFORM_SETTINGS
-- name: JMETER_DIRECTORY_INPUT
-  value: $(System.DefaultWorkingDirectory)/jmeter
-- name: JMETER_DIRECTORY_OUTPUT
-  value: $(System.DefaultWorkingDirectory)/results
-- name: TERRAFORM_VERSION
-  value: 0.13.2
-
-steps:
-
-- task: AzureCLI@2
-  displayName: 'SETUP: Validate JMeter Docker Image'
-  inputs:
-    azureSubscription: $(AZURE_SERVICE_CONNECTION_NAME)
-    scriptType: bash
-    scriptLocation: inlineScript
-    inlineScript: |
-      az acr login -n $(TF_VAR_JMETER_ACR_NAME)
-      docker pull $(TF_VAR_JMETER_DOCKER_IMAGE)
-      docker rm  jmx-validator 
-- script: |
-    docker run --name=jmx-validator -v $(JMETER_DIRECTORY_INPUT):/jmeter -w /jmeter \
-      --entrypoint "TestPlanCheck.sh" $(TF_VAR_JMETER_DOCKER_IMAGE) \
-      --stats --tree-dump --jmx $(TF_VAR_JMETER_JMX_FILE)
-  displayName: 'SETUP: Validate JMX File'
-
-
-- task: AzureCLI@2
-  displayName: 'SETUP: Prepare Terraform Credentials'
-  inputs:
-    azureSubscription: $(AZURE_SERVICE_CONNECTION_NAME)
-    scriptType: bash
-    scriptLocation: inlineScript
-    addSpnToEnvironment: true
-    inlineScript: |
-      echo "##vso[task.setvariable variable=ARM_CLIENT_ID]$servicePrincipalId"
-      echo "##vso[task.setvariable variable=ARM_CLIENT_SECRET]$servicePrincipalKey"
-      echo "##vso[task.setvariable variable=ARM_TENANT_ID]$tenantId"
-      echo "##vso[task.setvariable variable=ARM_SUBSCRIPTION_ID]$AZURE_SUBSCRIPTION_ID"
-
-- script: |
-    wget https://releases.hashicorp.com/terraform/$(TERRAFORM_VERSION)/terraform_$(TERRAFORM_VERSION)_linux_amd64.zip
-    unzip terraform_$(TERRAFORM_VERSION)_linux_amd64.zip
-    sudo mv ./terraform  /usr/local/bin
-  workingDirectory: $(Agent.TempDirectory)
-  displayName: 'SETUP: Install Terraform'
-
-- script: terraform init
-  workingDirectory: ./terraform
-  displayName: 'SETUP: Run Terraform Init'
-
-- script: terraform apply -target azurerm_storage_share.jmeter_share -auto-approve
-  workingDirectory: ./terraform
-  displayName: 'SETUP: Run Terraform Apply (target=file share)'
-
-- script: |
-    SAS_END=`date -u -d "60 minutes" '+%Y-%m-%dT%H:%MZ'` && \
-    JMETER_SAS=`az storage share generate-sas -n jmeter --account-name $(terraform output storage_account_name) --account-key $(terraform output storage_account_key) --https-only --permissions dlrw --expiry $SAS_END -o tsv` && \
-    azcopy cp \
-    "$(JMETER_DIRECTORY_INPUT)/*.jmx" \
-    $(terraform output storage_file_share_url)?$JMETER_SAS \
-    --recursive
-  workingDirectory: ./terraform
-  displayName: 'SETUP: Transfer JMeter Files to Storage Account'
-
-- script: terraform apply -auto-approve
-  workingDirectory: ./terraform
-  displayName: 'SETUP: Run Terraform Apply (target=all)'
-
-- task: AzureCLI@2
-  inputs:
-    azureSubscription: $(AZURE_SERVICE_CONNECTION_NAME)
-    workingDirectory: ./terraform
-    scriptType: bash
-    scriptLocation: inlineScript
-    inlineScript: |
-      RG=$(terraform output resource_group_name)
-      NAME=$(terraform output jmeter_controller_name)
-      echo "`date`: Started!"
-      while [ $(az container show -g $RG -n $NAME --query "containers[0].instanceView.currentState.state" -o tsv) == "Running" ]; do
-        echo "`date`: Still Running..."
-        sleep 20
-      done
-      echo "`date`: Finished!"
-  displayName: 'TEST: Wait Test Execution'
-
-
-#already downgradaed at the self agent pool 
-#- task: Bash@3
-  #displayName: 'Change version of Az CLI'
-  #inputs:
-   # targetType: inline
-   # script: |
-   #   sudo apt-get update
-   #  sudo apt-get install ca-certificates curl apt-transport-https lsb-release gnupg
-   #   curl -sL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/microsoft.gpg > /dev/null
-   #   AZ_REPO=$(lsb_release -cs)
-   #   echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $AZ_REPO main" | sudo tee /etc/apt/sources.list.d/azure-cli.list
-   #   sudo apt-get update
-   # have to change following the ubunto version
-   #  sudo apt-get install --allow-downgrades azure-cli=2.27.2-1~bionic
-
-    
-- task: AzureCLI@2
-  inputs:
-    azureSubscription: $(AZURE_SERVICE_CONNECTION_NAME)
-    workingDirectory: ./terraform
-    scriptType: bash
-    scriptLocation: inlineScript
-    inlineScript: |
-      az container logs -g $(terraform output resource_group_name) -n $(terraform output jmeter_controller_name)
-      RESOURCE_GROUP=$(terraform output resource_group_name)
-      echo -n $(terraform output jmeter_workers_names) | xargs -t -d "," -I '{}' -n1 az container logs -g $RESOURCE_GROUP -n {}
-  displayName: 'RESULTS: Collect JMeter Controller and Worker Logs'
-
-- task: AzureCLI@2
-  inputs:
-    azureSubscription: $(AZURE_SERVICE_CONNECTION_NAME)
-    workingDirectory: ./terraform
-    scriptType: bash
-    scriptLocation: inlineScript
-    inlineScript: |
-      echo "OFER"
-      echo " before AZcopy"
-      ls -l $(JMETER_DIRECTORY_OUTPUT)/jmeter/$(terraform output jmeter_results_file) 
-     
-       SAS_END=`date -u -d "60 minutes" '+%Y-%m-%dT%H:%MZ'` && \
-       JMETER_SAS=`az storage share generate-sas -n jmeter --account-name $(terraform output storage_account_name) --account-key $(terraform output storage_account_key) --https-only --permissions dlrw --expiry $SAS_END -o tsv` && \
-       azcopy cp \
-         $(terraform output storage_file_share_url)?$JMETER_SAS \
-         "$(JMETER_DIRECTORY_OUTPUT)" \
-         --recursive
-
-       echo "OFER"
-       echo $(terraform output storage_file_share_url)
-       echo $JMETER_DIRECTORY_OUTPUT
-      echo "OFER"
-      echo "after AZcopy"
-       
-  displayName: 'RESULTS: Get JMeter Artifacts'
-
-- script: |
-    JMETER_RESULTS=$(JMETER_DIRECTORY_OUTPUT)/jmeter/$(terraform output jmeter_results_file)
-    echo "OFER"
-    echo $JMETER_RESULTS
-    ls -l  $JMETER_RESULTS
-    JUNIT_RESULTS=$(JMETER_DIRECTORY_OUTPUT)/output.xml
-    echo $JUNIT_RESULTS
-    python3 ../scripts/jtl_junit_converter.py $JMETER_RESULTS $JUNIT_RESULTS
-  workingDirectory: ./terraform
-  displayName: 'RESULTS: Convert JMeter Results to JUnit Format'
-
-- task: PublishTestResults@2
-  inputs:
-    testResultsFormat: 'JUnit'
-    testResultsFiles: '$(JMETER_DIRECTORY_OUTPUT)/output.xml'
-    failTaskOnFailedTests: true
-  displayName: 'RESULTS: Publish Load Testing Results'
-
-- publish: $(JMETER_DIRECTORY_OUTPUT)
-  artifact: JMeterResults
-  condition: succeededOrFailed()
-  displayName: 'RESULTS: Publish Load Test Artifacts'
-
-- script: terraform destroy -auto-approve
-  condition: always()
-  workingDirectory: ./terraform
-  displayName: 'TEARDOWN: Run Terraform Destroy'
-
-
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.5-SNAPSHOT e7292cc">
+  <hashTree>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Test Plan" enabled="true">
+      <stringProp name="TestPlan.comments"></stringProp>
+      <boolProp name="TestPlan.functional_mode">false</boolProp>
+      <boolProp name="TestPlan.tearDown_on_shutdown">true</boolProp>
+      <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
+      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+        <collectionProp name="Arguments.arguments"/>
+      </elementProp>
+      <stringProp name="TestPlan.user_define_classpath"></stringProp>
+    </TestPlan>
+    <hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">0</stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+      </ThreadGroup>
+      <hashTree>
+        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+          <collectionProp name="HeaderManager.headers">
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">Content-Type</stringProp>
+              <stringProp name="Header.value">application/json</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">Authorization</stringProp>
+              <stringProp name="Header.value">Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Imwzc1EtNTBjQ0g0eEJWWkxIVEd3blNSNzY4MCIsImtpZCI6Imwzc1EtNTBjQ0g0eEJWWkxIVEd3blNSNzY4MCJ9.eyJhdWQiOiJhcGk6Ly9hZDU5ZDU2Yy03MDUzLTRjNzctOWEwYi0wYzRhYTMwZGRiMzgiLCJpc3MiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC83ODgyMDg1Mi01NWZhLTQ1MGItOTA4ZC00NWMwZDkxMWU3NmIvIiwiaWF0IjoxNjM0MTE5NTU3LCJuYmYiOjE2MzQxMTk1NTcsImV4cCI6MTYzNDEyMzQ1NywiYWlvIjoiRTJaZ1lGRDBldS9nZHVOMXlWYm1ZaDlSalJRdkFBPT0iLCJhcHBpZCI6IjQwMWFmYjc2LTBkOWMtNDVjNi04OWIwLWNmZjg1NDE0YWQ2OCIsImFwcGlkYWNyIjoiMSIsImlkcCI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc4ODIwODUyLTU1ZmEtNDUwYi05MDhkLTQ1YzBkOTExZTc2Yi8iLCJvaWQiOiJiNjc2NTdkOC1iNTEwLTQzYjItYjIwYS1iNjY0Zjk4NmY5MzUiLCJyaCI6IjAuQVRVQVVnaUNlUHBWQzBXUWpVWEEyUkhuYTNiN0drQ2NEY1pGaWJEUC1GUVVyV2cxQUFBLiIsInJvbGVzIjpbIlVzZXJzLlVwbnMuV3JpdGUiLCJVc2Vycy5JZGVudGl0eU51bWJlci5SZWFkIiwiVXNlcnMuVXBucy5SZWFkIiwiVXNlcnMuT2lkcy5Xcml0ZSJdLCJzdWIiOiJiNjc2NTdkOC1iNTEwLTQzYjItYjIwYS1iNjY0Zjk4NmY5MzUiLCJ0aWQiOiI3ODgyMDg1Mi01NWZhLTQ1MGItOTA4ZC00NWMwZDkxMWU3NmIiLCJ1dGkiOiJCTXE1bTF3VGMwZTFFNzV1aHk1eEFBIiwidmVyIjoiMS4wIn0.KfKz468XNJPrhjg5qTgyj5DABYouPI5V74dafzGMJyNdgJCvT_LJvmZ3pf66_pYzSwQw7zr9mPxzDhNYxo0IJK7WaXWe_ON1u4wej52x6VboUczm1NpqG3QBeeJKOS3on9SP1YyvbCr7tuV_4sGEkk0il5BypDNZ8u0qVyuMAzoPFDGvm7fL3a_UleO2w-wqqf4W2QPrQZ3pfY5LpWxboBKxIRliswpyginDA-BS8rQGoYFukjV2BmdZr3rellANV9pGt_lUt3voZ7G9fllEp2eMKkfh-6g8G_9U9RuRvvVsgyaBnSti-fJP-rb4Ngus4_OnTOAPiVByWRA_7jzgkg</stringProp>
+            </elementProp>
+          </collectionProp>
+        </HeaderManager>
+        <hashTree/>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HTTP Request" enabled="true">
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{&quot;token&quot;:&quot;eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Imwzc1EtNTBjQ0g0eEJWWkxIVEd3blNSNzY4MCJ9.eyJhdWQiOiI0MDFhZmI3Ni0wZDljLTQ1YzYtODliMC1jZmY4NTQxNGFkNjgiLCJpc3MiOiJodHRwczovL2xvZ2luLm1pY3Jvc29mdG9ubGluZS5jb20vNzg4MjA4NTItNTVmYS00NTBiLTkwOGQtNDVjMGQ5MTFlNzZiL3YyLjAiLCJpYXQiOjE2MzQxMTk1NjYsIm5iZiI6MTYzNDExOTU2NiwiZXhwIjoxNjM0MTIzNDY2LCJhaW8iOiJBVlFBcS84VEFBQUFlcGlPZ2lPZVpMU05EYzRod3Z2ME5hYytMMlVWZlFFM0lsbDZIbWNPdzBOdnduMG5qM0V4MlVoa1NVc3kxZkZFYjU1Y3VnQWtZL3gzM25YNHlMVDRCaWMvMmJ6NTA0djg3QndOY3VHWHBVUT0iLCJuYW1lIjoidGVzdCBhcGkgNCIsIm5vbmNlIjoiNWQxMDk5M2YtODMwYS00Nzk3LTkzYjAtNGJlZTllZmEzYWU4Iiwib2lkIjoiOGU3NTFkMzAtZGNmYS00Y2IzLTgxZjktN2ZlNGFmNzFmODFmIiwicHJlZmVycmVkX3VzZXJuYW1lIjoidGVzdF9hcGk0QGlkZi5pbCIsInJoIjoiMC5BVFVBVWdpQ2VQcFZDMFdRalVYQTJSSG5hM2I3R2tDY0RjWkZpYkRQLUZRVXJXZzFBTFkuIiwic3ViIjoib2pFYWVlZHd6dWxJVEhDNzlPWTdycW9TeXEwWkxQcmtSRml5UU1fS1hFOCIsInRpZCI6Ijc4ODIwODUyLTU1ZmEtNDUwYi05MDhkLTQ1YzBkOTExZTc2YiIsInVwbiI6InRlc3RfYXBpNEBpZGYuaWwiLCJ1dGkiOiJTMWdYYmJhRk5rZUNIT0ZtNlhlSEFBIiwidmVyIjoiMi4wIn0.kHzaabgLfAI4g4nw3_27j7yq24Qc3uPWQvco623rVWKkgjgRS0WmhZoTSw4Tv9z2wXh-47SkFs2HRqG9B3_XHZ2jKrnvf1aM3KH8XlGcxmtEkTYiCw5b-K7JjDm1I_4iV3XpWkXHPtXO4GwxmupvdAwNUIjMfo0n18utMjgke9A96iNpHwejekdjemJd0ik0PhTXk8_IwcIRSKbuA0hAP8cOFmHJIpNmImDFr6YIPTMDYBizC2wG33R0Vq02RyrmeuTsKM7H_EH5UDM05lwIO6Xa1dd7F-1oKNKe_f5KFgtXOJOpZ7WZXuDq3l9acb17GefJsdkQMj_1guJRlgFL_A&quot;}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain"></stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.protocol"></stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">https://mhub.idf.il/idfapi/api/users/getIdentityNumber</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree/>
+      </hashTree>
+    </hashTree>
+  </hashTree>
+</jmeterTestPlan>
