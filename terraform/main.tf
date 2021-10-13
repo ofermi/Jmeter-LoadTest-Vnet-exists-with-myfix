@@ -31,43 +31,43 @@ resource "random_id" "random" {
 #}
 
 
-resource "azurerm_subnet" "jmeter_subnet" {
-  name                 = "${var.PREFIX}subnet"
+#resource "azurerm_subnet" "jmeter_subnet" {
+  #name                 = "${var.PREFIX}subnet1"
   
-  resource_group_name  = "jmeter"
-  virtual_network_name = "jmetervnet"
-  address_prefix       = var.SUBNET_ADDRESS_PREFIX
+ # resource_group_name  = "jmeter"
+  #virtual_network_name = "jmetervnet"
+ # address_prefix       = var.SUBNET_ADDRESS_PREFIX
 
-  delegation {
-    name = "delegation"
+  #delegation {
+   # name = "delegation"
 
-    service_delegation {
-      name    = "Microsoft.ContainerInstance/containerGroups"
-      actions = ["Microsoft.Network/virtualNetworks/subnets/action"]
-    }
-  }
+   # service_delegation {
+    #  name    = "Microsoft.ContainerInstance/containerGroups"
+   #   actions = ["Microsoft.Network/virtualNetworks/subnets/action"]
+   # }
+  #}
 
-  service_endpoints = ["Microsoft.Storage"]
-}
+#  service_endpoints = ["Microsoft.Storage"]
+#}
 
-resource "azurerm_network_profile" "jmeter_net_profile" {
-  name                = "${var.PREFIX}netprofile"
-  location            = "westeurope"
-  resource_group_name = "jmeter"
+#resource "azurerm_network_profile" "jmeter_net_profile" {
+ # name                = "${var.PREFIX}netprofile"
+ # location            = "westeurope"
+ # resource_group_name = "jmeter"
 
-  container_network_interface {
-    name = "${var.PREFIX}cnic"
+  #container_network_interface {
+  #  name = "${var.PREFIX}cnic"
 
-    ip_configuration {
-      name      = "${var.PREFIX}ipconfig"
-      subnet_id = azurerm_subnet.jmeter_subnet.id
-    }
-  }
-     tags = {
-    Application = var.JMETER_TAG_APPLICATION
-    Environment= var.JMETER_TAG_ENVIRONMENT
-  }
-}
+   # ip_configuration {
+   #   name      = "${var.PREFIX}ipconfig"
+   #   subnet_id = azurerm_subnet.jmeter_subnet.id
+    #}
+   #}
+   #  tags = {
+  #  Application = var.JMETER_TAG_APPLICATION
+  #  Environment= var.JMETER_TAG_ENVIRONMENT
+ # }
+#}
 
 resource "azurerm_storage_account" "jmeter_storage" {
   name                = "${var.PREFIX}storage${random_id.random.hex}"
