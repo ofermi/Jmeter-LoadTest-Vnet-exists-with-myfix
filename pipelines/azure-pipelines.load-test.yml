@@ -137,8 +137,10 @@ steps:
          $(terraform output storage_file_share_url)?$JMETER_SAS \
          "$(JMETER_DIRECTORY_OUTPUT)" \
          --recursive
-
+        
+           
        echo "OFER"
+       ll $(terraform output storage_file_share_url)?$JMETER_SAS
        echo $(terraform output storage_file_share_url)
        echo $JMETER_DIRECTORY_OUTPUT
       echo "OFER"
