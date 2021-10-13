@@ -8,6 +8,9 @@ data  "azurerm_subnet" "jmeter_subnet" {
  virtual_network_name = "jmetervnet"
 }
 
+output "subnet_id" {
+  value = data.azurerm_subnet.jmeter_subnet.id
+}
 resource "random_id" "random" {
   byte_length = 4
 }
@@ -63,7 +66,7 @@ resource "random_id" "random" {
 
    # ip_configuration {
    #   name      = "${var.PREFIX}ipconfig"
-   #   subnet_id = azurerm_subnet.jmeter_subnet.id
+   #   subnet_id = data.azurerm_subnet.jmeter_subnet.id
     #}
    #}
    #  tags = {
@@ -82,7 +85,7 @@ resource "azurerm_storage_account" "jmeter_storage" {
 
   network_rules {
     default_action             = "Allow"
-    virtual_network_subnet_ids = ["${azurerm_subnet.jmeter_subnet.id}"]
+    virtual_network_subnet_ids = ["${data.azurerm_subnet.jmeter_subnet.id}"]
   }
      tags = {
     Application = var.JMETER_TAG_APPLICATION
