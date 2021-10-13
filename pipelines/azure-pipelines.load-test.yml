@@ -137,11 +137,11 @@ steps:
          --recursive
 
        echo "OFER"
-       echo $storage_file_share_url
+       echo $(terraform output storage_file_share_url)
        echo $JMETER_DIRECTORY_OUTPUT
       echo "OFER"
-      echo " after AZcopy"
-      ls -l $(JMETER_DIRECTORY_OUTPUT)/jmeter/$(terraform output jmeter_results_file) 
+      echo "after AZcopy"
+       
   displayName: 'RESULTS: Get JMeter Artifacts'
 
 - script: |
