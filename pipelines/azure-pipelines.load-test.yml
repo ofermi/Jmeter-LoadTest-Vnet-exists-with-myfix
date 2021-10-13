@@ -171,9 +171,9 @@ steps:
   condition: succeededOrFailed()
   displayName: 'RESULTS: Publish Load Test Artifacts'
 
-- script: terraform destroy -auto-approve
-  condition: always()
-  workingDirectory: ./terraform
-  displayName: 'TEARDOWN: Run Terraform Destroy'
+#- script: terraform destroy -auto-approve
+#  condition: always()
+#  workingDirectory: ./terraform
+#  displayName: 'TEARDOWN: Run Terraform Destroy'
 
 
