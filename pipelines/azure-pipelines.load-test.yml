@@ -140,8 +140,8 @@ steps:
         
            
        echo "OFER"
-       ll $(terraform output storage_file_share_url)?$JMETER_SAS
        echo $(terraform output storage_file_share_url)
+       ll $(terraform output storage_file_share_url)?$JMETER_SAS
        echo $JMETER_DIRECTORY_OUTPUT
       echo "OFER"
       echo "after AZcopy"
