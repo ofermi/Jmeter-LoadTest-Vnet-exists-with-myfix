@@ -135,7 +135,9 @@ steps:
 
 - script: |
     JMETER_RESULTS=$(JMETER_DIRECTORY_OUTPUT)/jmeter/$(terraform output jmeter_results_file)
+    echo $JMETER_RESULTS
     JUNIT_RESULTS=$(JMETER_DIRECTORY_OUTPUT)/output.xml
+    echo $JUNIT_RESULTS
     python3 ../scripts/jtl_junit_converter.py $JMETER_RESULTS $JUNIT_RESULTS
   workingDirectory: ./terraform
   displayName: 'RESULTS: Convert JMeter Results to JUnit Format'
