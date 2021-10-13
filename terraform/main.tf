@@ -9,11 +9,6 @@ data  "azurerm_subnet" "jmeter_subnet" {
 }
 
 
-data "azurerm_network_profile" "jmeter_net_profile" {
-  name                = "jmeternetprofile"
-  location            = "westeurope"
-  resource_group_name = "jmeter"
-}
  
 resource "random_id" "random" {
   byte_length = 4
@@ -60,24 +55,24 @@ resource "random_id" "random" {
 #  service_endpoints = ["Microsoft.Storage"]
 #}
 
-#resource "azurerm_network_profile" "jmeter_net_profile" {
- # name                = "${var.PREFIX}netprofile"
- # location            = "westeurope"
- # resource_group_name = "jmeter"
+resource "azurerm_network_profile" "jmeter_net_profile" {
+  name                = "${var.PREFIX}netprofile"
+  location            = "westeurope"
+  resource_group_name = "jmeter"
 
-  #container_network_interface {
-  #  name = "${var.PREFIX}cnic"
+  container_network_interface {
+    name = "${var.PREFIX}cnic"
 
-   # ip_configuration {
-   #   name      = "${var.PREFIX}ipconfig"
-   #   subnet_id = data.azurerm_subnet.jmeter_subnet.id
-    #}
-   #}
-   #  tags = {
-  #  Application = var.JMETER_TAG_APPLICATION
-  #  Environment= var.JMETER_TAG_ENVIRONMENT
- # }
-#}
+    ip_configuration {
+      name      = "${var.PREFIX}ipconfig"
+     subnet_id = data.azurerm_subnet.jmeter_subnet.id
+    }
+   }
+     tags = {
+    Application = var.JMETER_TAG_APPLICATION
+    Environment= var.JMETER_TAG_ENVIRONMENT
+  }
+}
 
 resource "azurerm_storage_account" "jmeter_storage" {
   name                = "${var.PREFIX}storage${random_id.random.hex}"
