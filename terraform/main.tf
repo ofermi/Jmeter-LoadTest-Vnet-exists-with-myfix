@@ -2,8 +2,11 @@ data "azurerm_container_registry" "jmeter_acr" {
   name                = var.JMETER_ACR_NAME
   resource_group_name = var.JMETER_ACR_RESOURCE_GROUP_NAME
 }
-
-
+data  "azurerm_subnet" "jmeter_subnet" {
+ name                 = "jmetersubnet"
+ resource_group_name  = "jmeter"
+ virtual_network_name = "jmetervnet"
+}
 
 resource "random_id" "random" {
   byte_length = 4
