@@ -107,7 +107,7 @@ resource "azurerm_container_group" "jmeter_workers" {
   ip_address_type = "private"
   os_type         = "Linux"
 
-  network_profile_id = data.azurerm_network_profile.jmeter_net_profile.id
+  network_profile_id = azurerm_network_profile.jmeter_net_profile.id
 
   image_registry_credential {
     server   = data.azurerm_container_registry.jmeter_acr.login_server
