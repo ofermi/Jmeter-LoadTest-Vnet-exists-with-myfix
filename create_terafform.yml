@@ -1,0 +1,61 @@
+trigger: none
+
+pool: 'Mamram Linux Self-Agent'
+
+variables:
+- group: JMETER_TERRAFORM_SETTINGS
+- name: JMETER_DIRECTORY_INPUT
+  value: $(System.DefaultWorkingDirectory)/jmeter
+- name: JMETER_DIRECTORY_OUTPUT
+  value: $(System.DefaultWorkingDirectory)/results
+- name: TERRAFORM_VERSION
+  value: 0.13.2
+
+steps:
+
+- task: AzureCLI@2
+  displayName: 'SETUP: Prepare Terraform Credentials'
+  inputs:
+    azureSubscription: $(AZURE_SERVICE_CONNECTION_NAME)
+    scriptType: bash
+    scriptLocation: inlineScript
+    addSpnToEnvironment: true
+    inlineScript: |
+      echo "##vso[task.setvariable variable=ARM_CLIENT_ID]$servicePrincipalId"
+      echo "##vso[task.setvariable variable=ARM_CLIENT_SECRET]$servicePrincipalKey"
+      echo "##vso[task.setvariable variable=ARM_TENANT_ID]$tenantId"
+      echo "##vso[task.setvariable variable=ARM_SUBSCRIPTION_ID]$AZURE_SUBSCRIPTION_ID"
+
+- script: |
+    wget https://releases.hashicorp.com/terraform/$(TERRAFORM_VERSION)/terraform_$(TERRAFORM_VERSION)_linux_amd64.zip
+    unzip terraform_$(TERRAFORM_VERSION)_linux_amd64.zip
+    sudo mv ./terraform  /usr/local/bin
+  workingDirectory: $(Agent.TempDirectory)
+  displayName: 'SETUP: Install Terraform'
+
+- script: terraform init
+  workingDirectory: ./terraform
+  displayName: 'SETUP: Run Terraform Init'
+
+- script: terraform apply -target azurerm_storage_share.jmeter_share -auto-approve
+  workingDirectory: ./terraform
+  displayName: 'SETUP: Run Terraform Apply (target=file share)'
+
+- script: |
+    SAS_END=`date -u -d "30 minutes" '+%Y-%m-%dT%H:%MZ'` && \
+    JMETER_SAS=`az storage share generate-sas -n jmeter --account-name $(terraform output storage_account_name) --account-key $(terraform output storage_account_key) --https-only --permissions dlrw --expiry $SAS_END -o tsv` && \
+    azcopy cp \
+    "$(JMETER_DIRECTORY_INPUT)/*.jmx" \
+    $(terraform output storage_file_share_url)?$JMETER_SAS \
+    --recursive
+  workingDirectory: ./terraform
+  displayName: 'SETUP: Transfer JMeter Files to Storage Account'
+
+- script: terraform apply -auto-approve
+  workingDirectory: ./terraform
+  displayName: 'SETUP: Run Terraform Apply (target=all)'
+
+
+
+ 
+
