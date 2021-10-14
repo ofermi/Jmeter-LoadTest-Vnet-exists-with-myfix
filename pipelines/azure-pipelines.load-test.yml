@@ -1,8 +1,8 @@
 trigger: none
 
-#pool: 'Mamram Linux Self-Agent'
-pool:
-  vmImage: 'ubuntu-18.04'
+pool: 'Mamram Linux Self-Agent'
+#pool:
+#  vmImage: 'ubuntu-18.04'
 
 
 variables:
