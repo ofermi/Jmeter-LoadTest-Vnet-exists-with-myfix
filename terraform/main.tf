@@ -149,13 +149,13 @@ resource "azurerm_container_group" "jmeter_workers" {
 
 
 
-resource "time_sleep" "wait_120_seconds" {
-  depends_on = [azurerm_container_group.jmeter_workers]
-  create_duration = "120s"
-}
+#resource "time_sleep" "wait_120_seconds" {
+#  depends_on = [azurerm_container_group.jmeter_workers]
+#  create_duration = "120s"
+#}
 
 resource "azurerm_container_group" "jmeter_controller" {
-   depends_on = [time_sleep.wait_120_seconds]
+#  depends_on = [time_sleep.wait_120_seconds]
   name                = "${var.PREFIX}-controller"
   location            = "westeurope"
   resource_group_name = "jmeter"
