@@ -5,7 +5,7 @@ variable "RESOURCE_GROUP_NAME" {
 
 variable "LOCATION" {
   type    = string
-  default = "westeurope"
+  default = "westus"
 }
 
 variable "PREFIX" {
