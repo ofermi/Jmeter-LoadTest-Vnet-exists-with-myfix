@@ -3,11 +3,11 @@ data "azurerm_container_registry" "jmeter_acr" {
   resource_group_name = var.JMETER_ACR_RESOURCE_GROUP_NAME
 }
 
-#data  "azurerm_subnet" "jmeter_subnet" {
-# name                 = "jmetersubnet"
-# resource_group_name  = "jmeter"
-# virtual_network_name = "jmetervnet"
-#}
+data  "azurerm_subnet" "jmeter_subnet" {
+ name                 = "jmetersubnet"
+ resource_group_name  = "jmeter"
+ virtual_network_name = "jmetervnet"
+}
 
 resource "random_id" "random" {
   byte_length = 4
@@ -35,24 +35,24 @@ resource "random_id" "random" {
 #}
 
 
-resource "azurerm_subnet" "jmeter_subnet" {
-  name                 = "${var.PREFIX}subnet"
+#resource "azurerm_subnet" "jmeter_subnet" {
+#  name                 = "${var.PREFIX}subnet"
   
-  resource_group_name  = "jmeter"
-  virtual_network_name = "jmetervnet"
-  address_prefix       = var.SUBNET_ADDRESS_PREFIX
+#  resource_group_name  = "jmeter"
+#  virtual_network_name = "jmetervnet"
+#  address_prefix       = var.SUBNET_ADDRESS_PREFIX
 
-  delegation {
-    name = "delegation"
+#  delegation {
+#    name = "delegation"
 
-    service_delegation {
-      name    = "Microsoft.ContainerInstance/containerGroups"
-      actions = ["Microsoft.Network/virtualNetworks/subnets/action"]
-    }
-  }
+ #   service_delegation {
+ #     name    = "Microsoft.ContainerInstance/containerGroups"
+ #     actions = ["Microsoft.Network/virtualNetworks/subnets/action"]
+#    }
+ # }
 
-  service_endpoints = ["Microsoft.Storage"]
-}
+ # service_endpoints = ["Microsoft.Storage"]
+#}
 
 resource "azurerm_network_profile" "jmeter_net_profile" {
   name                = "${var.PREFIX}netprofile"
@@ -83,8 +83,8 @@ resource "azurerm_storage_account" "jmeter_storage" {
 
   network_rules {
     default_action             = "Allow"
- #   virtual_network_subnet_ids = ["${data.azurerm_subnet.jmeter_subnet.id}"]
-  virtual_network_subnet_ids = ["${azurerm_subnet.jmeter_subnet.id}"]
+    virtual_network_subnet_ids = ["${data.azurerm_subnet.jmeter_subnet.id}"]
+ # virtual_network_subnet_ids = ["${azurerm_subnet.jmeter_subnet.id}"]
   }
      tags = {
     Application = var.JMETER_TAG_APPLICATION
