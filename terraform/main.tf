@@ -37,7 +37,7 @@ resource "random_id" "random" {
 
 
 resource "azurerm_subnet" "jmeter_subnet" {
-  name                 = "${var.PREFIX}subnet1"
+  name                 = "${var.PREFIX}subnet"
   
   resource_group_name  = "jmeter"
   virtual_network_name = "jmetervnet"
