@@ -100,7 +100,7 @@ resource "azurerm_storage_share" "jmeter_share" {
 
 resource "azurerm_container_group" "jmeter_workers" {
   count               = var.JMETER_WORKERS_COUNT
-  name                = "${var.PREFIX}-worker${count.index}"
+  name                = "${var.PREFIX}-worker-new${count.index}"
   location            = "westeurope"
   resource_group_name = "jmeter"
 
@@ -156,7 +156,7 @@ resource "time_sleep" "wait_600_seconds" {
 
 resource "azurerm_container_group" "jmeter_controller" {
  depends_on = [time_sleep.wait_600_seconds]
-  name                = "${var.PREFIX}-controller"
+  name                = "${var.PREFIX}-controller-new"
   location            = "westeurope"
   resource_group_name = "jmeter"
 
