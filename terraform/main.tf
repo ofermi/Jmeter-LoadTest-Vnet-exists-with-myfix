@@ -83,7 +83,8 @@ resource "azurerm_storage_account" "jmeter_storage" {
 
   network_rules {
     default_action             = "Allow"
-    virtual_network_subnet_ids = ["${data.azurerm_subnet.jmeter_subnet.id}"]
+ #   virtual_network_subnet_ids = ["${data.azurerm_subnet.jmeter_subnet.id}"]
+  virtual_network_subnet_ids = ["${azurerm_subnet.jmeter_subnet.id}"]
   }
      tags = {
     Application = var.JMETER_TAG_APPLICATION
