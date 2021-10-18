@@ -2,14 +2,13 @@ data "azurerm_container_registry" "jmeter_acr" {
   name                = var.JMETER_ACR_NAME
   resource_group_name = var.JMETER_ACR_RESOURCE_GROUP_NAME
 }
+
 #data  "azurerm_subnet" "jmeter_subnet" {
 # name                 = "jmetersubnet"
 # resource_group_name  = "jmeter"
 # virtual_network_name = "jmetervnet"
 #}
 
-
- 
 resource "random_id" "random" {
   byte_length = 4
 }
@@ -197,6 +196,7 @@ resource "azurerm_container_group" "jmeter_controller" {
       "/bin/sh",
       "-c",
       "cd /jmeter; /entrypoint.sh -n -J server.rmi.ssl.disable=true -t ${var.JMETER_JMX_FILE} -l ${var.JMETER_RESULTS_FILE} -e -o ${var.JMETER_DASHBOARD_FOLDER} -R ${join(",", "${azurerm_container_group.jmeter_workers.*.ip_address}")} ${var.JMETER_EXTRA_CLI_ARGUMENTS}",
+    ]
    }
      tags = {
     Application = var.JMETER_TAG_APPLICATION
