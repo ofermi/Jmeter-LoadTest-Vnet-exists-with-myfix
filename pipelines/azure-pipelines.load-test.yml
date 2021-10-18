@@ -170,10 +170,11 @@ steps:
     failTaskOnFailedTests: true
   displayName: 'RESULTS: Publish Load Testing Results'
 
-#- publish: $(JMETER_DIRECTORY_OUTPUT)
-#  artifact: JMeterResults
+- publish: $(JMETER_DIRECTORY_OUTPUT)
+  artifact: JMeterResults
 #  condition: succeededOrFailed()
-#  displayName: 'RESULTS: Publish Load Test Artifacts'
+  condition: succeeded()
+  displayName: 'RESULTS: Publish Load Test Artifacts'
 
 #- script: terraform destroy -auto-approve
 #  condition: always()
