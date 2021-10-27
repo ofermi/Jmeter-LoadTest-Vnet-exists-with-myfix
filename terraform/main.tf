@@ -106,17 +106,18 @@ resource "azurerm_storage_share" "jmeter_share" {
   quota                = var.JMETER_STORAGE_QUOTA_GIGABYTES
 }
 
+
 resource "azurerm_container_group" "jmeter_workers" {
   count               = var.JMETER_WORKERS_COUNT
-  name                = "${var.PREFIX}-worker_new${count.index}"
-  location            = var.LOCATION
-  resource_group_name = var.RESOURCE_GROUP_NAME
+  name                = "${var.PREFIX}-worker${count.index}"
+  location            = azurerm_resource_group.jmeter_rg.location
+  resource_group_name = azurerm_resource_group.jmeter_rg.name
 
   ip_address_type = "private"
   os_type         = "Linux"
 
-   network_profile_id = azurerm_network_profile.jmeter_net_profile.id
- #  network_profile_id = data.azurerm_virtual_network.jmeter_vnet.id
+  network_profile_id = azurerm_network_profile.jmeter_net_profile.id
+
   image_registry_credential {
     server   = data.azurerm_container_registry.jmeter_acr.login_server
     username = data.azurerm_container_registry.jmeter_acr.admin_username
@@ -124,7 +125,7 @@ resource "azurerm_container_group" "jmeter_workers" {
  }
 
   container {
-    name   = var.RESOURCE_GROUP_NAME
+    name   = "jmeter"
     image  = var.JMETER_DOCKER_IMAGE
     cpu    = var.JMETER_WORKER_CPU
     memory = var.JMETER_WORKER_MEMORY
@@ -135,7 +136,7 @@ resource "azurerm_container_group" "jmeter_workers" {
     }
 
     volume {
-      name                 = var.RESOURCE_GROUP_NAME
+      name                 = "jmeter"
       mount_path           = "/jmeter"
       read_only            = true
       storage_account_name = azurerm_storage_account.jmeter_storage.name
@@ -159,16 +160,16 @@ resource "azurerm_container_group" "jmeter_workers" {
 resource "azurerm_container_group" "jmeter_controller" {
  #  depends_on = [time_sleep.wait_600_seconds]
   #count = 0
-  #count = "${var.number_controller}"
-  name                = "${var.PREFIX}-controller_new"
-  location            = var.LOCATION
-  resource_group_name = var.RESOURCE_GROUP_NAME
+  count = "${var.number_controller}"
+  name                = "${var.PREFIX}-controller"
+  location            = azurerm_resource_group.jmeter_rg.location
+  resource_group_name = azurerm_resource_group.jmeter_rg.name
 
   ip_address_type = "private"
   os_type         = "Linux"
 
   network_profile_id = azurerm_network_profile.jmeter_net_profile.id
-  #network_profile_id = data.azurerm_virtual_network.jmeter_vnet.id
+
   restart_policy = "Never"
 
   image_registry_credential {
@@ -178,7 +179,7 @@ resource "azurerm_container_group" "jmeter_controller" {
   }
 
   container {
-    name   = var.RESOURCE_GROUP_NAME
+    name   = "jmeter"
     image  = var.JMETER_DOCKER_IMAGE
     cpu    = var.JMETER_CONTROLLER_CPU
     memory = var.JMETER_CONTROLLER_MEMORY
@@ -189,7 +190,7 @@ resource "azurerm_container_group" "jmeter_controller" {
     }
 
     volume {
-      name                 = var.RESOURCE_GROUP_NAME
+      name                 = "jmeter"
       mount_path           = "/jmeter"
       read_only            = false
       storage_account_name = azurerm_storage_account.jmeter_storage.name
@@ -200,7 +201,8 @@ resource "azurerm_container_group" "jmeter_controller" {
     commands = [
       "/bin/sh",
       "-c",
-      "cd /jmeter;/entrypoint.sh -n -J server.rmi.ssl.disable=true -t ${var.JMETER_JMX_FILE} -l ${var.JMETER_RESULTS_FILE} -e -o ${var.JMETER_DASHBOARD_FOLDER} -R ${join(",","${azurerm_container_group.jmeter_workers.*.ip_address}")} ${var.JMETER_EXTRA_CLI_ARGUMENTS}",
+   #   "cd /jmeter;/entrypoint.sh -n -J server.rmi.ssl.disable=true -t ${var.JMETER_JMX_FILE} -l ${var.JMETER_RESULTS_FILE} -e -o ${var.JMETER_DASHBOARD_FOLDER} -R ${join(",","${azurerm_container_group.jmeter_workers.*.ip_address}")} ${var.JMETER_EXTRA_CLI_ARGUMENTS}",
+      "cd /jmeter;/entrypoint.sh -n -J server.rmi.ssl.disable=true -t ${var.JMETER_JMX_FILE} -l ${var.JMETER_RESULTS_FILE} -e -o ${var.JMETER_DASHBOARD_FOLDER} -R ${var.New_ip_list} ${var.JMETER_EXTRA_CLI_ARGUMENTS}",
     ]
   }
 }
