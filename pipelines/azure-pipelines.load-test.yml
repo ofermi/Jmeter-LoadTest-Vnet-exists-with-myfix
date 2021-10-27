@@ -153,7 +153,8 @@ steps:
     scriptLocation: inlineScript
     inlineScript: |
       RG=$(terraform output resource_group_name)
-      NAME=$(terraform output jmeter_controller_name)
+        # NAME=$(terraform output jmeter_controller_name)
+      NAME=$((terraform output jmeter_controller_name) | grep 'controller'  | awk -F '\"' '{print $2}')
       echo "`date`: Started!"
       while [ $(az container show -g $RG -n $NAME --query "containers[0].instanceView.currentState.state" -o tsv) == "Running" ]; do
         echo "`date`: Still Running..."
