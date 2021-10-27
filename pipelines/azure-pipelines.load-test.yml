@@ -90,7 +90,6 @@ steps:
     addSpnToEnvironment: true
 
 - task: PowerShell@2
-  displayName: "check Workers connectivitiy "
   inputs:
     workingDirectory: ./terraform
     targetType: "inline"
@@ -139,7 +138,8 @@ steps:
         $IP_LIST_No_SPACES="$IP_LIST"| awk '{ gsub(/ /,\"\"); print }'
         echo $IP_LIST_No_SPACES
         echo "##vso[task.setvariable variable=IP_LIST]$IP_LIST_No_SPACES"
-    pwsh: true
+  displayName: "check Workers connectivitiy "
+   
 
 - script: terraform apply -var="number_controller=1" -var="New_ip_list=$(IP_LIST)" -target azurerm_container_group.jmeter_controller -auto-approve
   workingDirectory: ./terraform
