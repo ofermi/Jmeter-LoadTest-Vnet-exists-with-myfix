@@ -110,8 +110,8 @@ resource "azurerm_storage_share" "jmeter_share" {
 resource "azurerm_container_group" "jmeter_workers" {
   count               = var.JMETER_WORKERS_COUNT
   name                = "${var.PREFIX}-worker${count.index}"
-  location            = azurerm_resource_group.jmeter_rg.location
-  resource_group_name = azurerm_resource_group.jmeter_rg.name
+  resource_group_name = var.RESOURCE_GROUP_NAME
+  location            = var.LOCATION
 
   ip_address_type = "private"
   os_type         = "Linux"
@@ -152,18 +152,12 @@ resource "azurerm_container_group" "jmeter_workers" {
   }
 }
  
-#resource "time_sleep" "wait_600_seconds" {
-#  depends_on = [azurerm_container_group.jmeter_workers]
- #create_duration = "600s"
-#}
-
 resource "azurerm_container_group" "jmeter_controller" {
- #  depends_on = [time_sleep.wait_600_seconds]
-  #count = 0
   count = "${var.number_controller}"
   name                = "${var.PREFIX}-controller"
-  location            = azurerm_resource_group.jmeter_rg.location
-  resource_group_name = azurerm_resource_group.jmeter_rg.name
+  resource_group_name = var.RESOURCE_GROUP_NAME
+  location            = var.LOCATION
+
 
   ip_address_type = "private"
   os_type         = "Linux"
