@@ -101,3 +101,13 @@ variable "JMETER_TAG_ENVIRONMENT" {
   default = "STG"
 }
 
+variable "number_controller" {
+   type    = number
+    default = 1
+}
+
+variable "New_ip_list" {
+   type    = string
+   default = ""
+}
+
