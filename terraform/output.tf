@@ -25,7 +25,8 @@ output "jmeter_controller_name" {
 }
 
 output "jmeter_controller_ip" {
-  value = azurerm_container_group.jmeter_controller.ip_address
+  # value = azurerm_container_group.jmeter_controller.ip_address
+  value = azurerm_container_group.jmeter_controller.*.ip_address
 }
 
 output "jmeter_workers_names" {
