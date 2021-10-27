@@ -106,7 +106,7 @@ steps:
         $IP_LIST="Empty"
         foreach ($Worker_name in $list_workers.Split(","))
         {
-            $SubscriptionId= "3acbc334-72a0-4b2d-b3bb-8498810f4955"
+            $SubscriptionId= "f508da0c-a772-4029-adff-357809bf800c"
             $RG=$(terraform output resource_group_name)
             $ContainerName="jmeter"
             $connection_Jmeter=Get-AzContainerInstanceLog -ContainerGroupName $Worker_name -ContainerName $ContainerName -ResourceGroupName $RG -SubscriptionId $SubscriptionId |grep 'Jmeter'| awk '{print $3}'
