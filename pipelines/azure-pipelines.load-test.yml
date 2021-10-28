@@ -112,6 +112,7 @@ steps:
         foreach ($Worker_name in $list_workers.Split(","))
         {
             $connection_Jmeter=""
+            Get-AzContainerInstanceLog -ContainerGroupName $Worker_name -ContainerName $ContainerName -ResourceGroupName $RG -SubscriptionId $SubscriptionId |grep 'Jmeter'| awk '{print $3}'
             echo "Worker_name=$Worker_name"
             $connection_Jmeter=Get-AzContainerInstanceLog -ContainerGroupName $Worker_name -ContainerName $ContainerName -ResourceGroupName $RG -SubscriptionId $SubscriptionId |grep 'Jmeter'| awk '{print $3}'
             echo "connection_Jmeter=$connection_Jmeter"
