@@ -101,7 +101,7 @@ resource "azurerm_storage_account" "jmeter_storage" {
 }
 
 resource "azurerm_storage_share" "jmeter_share" {
-  name                 = var.RESOURCE_GROUP_NAME
+  name                 = var.RESOURCE_GROUP_NAME_VNET
   storage_account_name = azurerm_storage_account.jmeter_storage.name
   quota                = var.JMETER_STORAGE_QUOTA_GIGABYTES
 }
