@@ -1,6 +1,6 @@
 variable "RESOURCE_GROUP_NAME" {
   type    = string
-  default = "jmeter_resources"
+  default = "jmeter-resources"
 }
 
 variable "RESOURCE_GROUP_NAME_VNET" {
