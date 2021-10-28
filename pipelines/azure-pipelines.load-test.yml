@@ -132,6 +132,7 @@ steps:
                    }
                echo "IP_LIST=$IP_LIST"
                $connection_Jmeter=""
+               sleep 3
                $cnt++
          }
         Remove-Item env:\SPKEY
