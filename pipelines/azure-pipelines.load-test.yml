@@ -111,11 +111,13 @@ steps:
 
         foreach ($Worker_name in $list_workers.Split(","))
         {
+            $connection_Jmeter=""
             echo "Worker_name=$Worker_name"
             $connection_Jmeter=Get-AzContainerInstanceLog -ContainerGroupName $Worker_name -ContainerName $ContainerName -ResourceGroupName $RG -SubscriptionId $SubscriptionId |grep 'Jmeter'| awk '{print $3}'
             echo "connection_Jmeter=$connection_Jmeter"
               if ("$connection_Jmeter" -eq $Worker_instance_name)
               {
+               {
                 echo "Jmeter RUN on container instance $Worker_name"
                 $worker_ip= Get-AzContainerGroup -Name $Worker_name  -ResourceGroupName $RG | fl |grep IPAddressIP |awk '{print $3}'
                 echo "The $Worker_name ip=$worker_ip"
@@ -125,13 +127,13 @@ steps:
                                  }
                 else {
                     $IP_LIST=echo "$IP_LIST , $worker_ip"
-                    } 
-              } 
+                     } 
+               } 
               else {
                  echo "$Worker_name was canceled"  
                    }
+              }  
                echo "IP_LIST=$IP_LIST"
-               $connection_Jmeter=""
                sleep 3
                $cnt++
          }
