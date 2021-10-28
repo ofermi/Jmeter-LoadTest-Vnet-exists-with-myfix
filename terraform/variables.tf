@@ -15,7 +15,7 @@ variable "LOCATION" {
 
 variable "PREFIX" {
   type    = string
-  default = "jmeter"
+  default = "jmete"
 }
 
 variable "VNET_ADDRESS_SPACE" {
