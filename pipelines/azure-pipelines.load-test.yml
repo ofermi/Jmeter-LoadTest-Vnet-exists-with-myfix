@@ -104,14 +104,16 @@ steps:
         $cnt = 1
         $first_worker="Empty"
         $IP_LIST="Empty"
+        $SubscriptionId= "f508da0c-a772-4029-adff-357809bf800c"
+        $RG=$(terraform output resource_group_name)
+        $ContainerName="jmeter
+        $Worker_instance_name="Jmeter"
+
         foreach ($Worker_name in $list_workers.Split(","))
         {
-            $SubscriptionId= "f508da0c-a772-4029-adff-357809bf800c"
-            $RG=$(terraform output resource_group_name)
-            $ContainerName="jmeter"
+            echo "Worker_name=$Worker_name"
             $connection_Jmeter=Get-AzContainerInstanceLog -ContainerGroupName $Worker_name -ContainerName $ContainerName -ResourceGroupName $RG -SubscriptionId $SubscriptionId |grep 'Jmeter'| awk '{print $3}'
             echo "connection_Jmeter=$connection_Jmeter"
-            $Worker_instance_name="Jmeter"
               if ("$connection_Jmeter" -eq $Worker_instance_name)
               {
                 echo "Jmeter RUN on container instance $Worker_name"
@@ -129,6 +131,7 @@ steps:
                  echo "$Worker_name was canceled"  
                    }
                echo "IP_LIST=$IP_LIST"
+               $connection_Jmeter=""
                $cnt++
          }
         Remove-Item env:\SPKEY
