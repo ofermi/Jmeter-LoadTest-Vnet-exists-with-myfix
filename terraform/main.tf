@@ -28,15 +28,15 @@ resource "random_id" "random" {
  # location            = var.LOCATION
 #}
 
-resource "azurerm_resource_group" "jmeter_rg" {
-  name     = var.RESOURCE_GROUP_NAME
-  location = var.LOCATION
+#resource "azurerm_resource_group" "jmeter_rg" {
+#  name     = var.RESOURCE_GROUP_NAME
+#  location = var.LOCATION
 
-  tags = {
-    Application = var.JMETER_TAG_APPLICATION
-    Environment= var.JMETER_TAG_ENVIRONMENT
-  }
-}
+#  tags = {
+#    Application = var.JMETER_TAG_APPLICATION
+#    Environment= var.JMETER_TAG_ENVIRONMENT
+#  }
+#}
 
 #resource "azurerm_virtual_network" "jmeter_vnet" {
 #  name                = "${var.PREFIX}vnet"
