@@ -106,7 +106,7 @@ steps:
         $IP_LIST="Empty"
         $SubscriptionId= "f508da0c-a772-4029-adff-357809bf800c"
         $RG=$(terraform output resource_group_name)
-        $ContainerName="jmeter
+        $ContainerName="jmeter"
         $Worker_instance_name="Jmeter"
 
         foreach ($Worker_name in $list_workers.Split(","))
