@@ -1,8 +1,12 @@
 variable "RESOURCE_GROUP_NAME" {
   type    = string
-  default = "jmeter"
+  default = "jmeter_resources"
 }
 
+variable "RESOURCE_GROUP_NAME_VNET" {
+  type    = string
+  default = "jmeter"
+}
 variable "LOCATION" {
   type    = string
   default = "westeurope"
