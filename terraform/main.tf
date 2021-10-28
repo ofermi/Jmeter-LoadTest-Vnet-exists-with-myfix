@@ -3,9 +3,11 @@ data "azurerm_container_registry" "jmeter_acr" {
   resource_group_name = var.JMETER_ACR_RESOURCE_GROUP_NAME
 }
 
-data  "azurerm_resource_group" "jmeter_rg" {
-  name     = var.RESOURCE_GROUP_NAME
-}
+#data  "azurerm_resource_group" "jmeter_rg" {
+#  name     = var.RESOURCE_GROUP_NAME
+#}
+
+ 
 
 data "azurerm_virtual_network" "jmeter_vnet" {
  name                = "${var.PREFIX}vnet"
@@ -86,7 +88,7 @@ resource "azurerm_network_profile" "jmeter_net_profile" {
 
 resource "azurerm_storage_account" "jmeter_storage" {
   name                = "${var.PREFIX}storage${random_id.random.hex}"
-  resource_group_name = var.RESOURCE_GROUP_NAME
+  resource_group_name = var.RESOURCE_GROUP_NAME_VNET
   location            = var.LOCATION
 
   account_tier             = "Standard"
