@@ -125,6 +125,8 @@ steps:
                 echo "Jmeter RUN on container instance $Worker_name"
                 $worker_ip= Get-AzContainerGroup -Name $Worker_name  -ResourceGroupName $RG | fl |grep IPAddressIP |awk '{print $3}'
                 echo "The $Worker_name ip=$worker_ip"
+                echo "No.Of workers=$cnt"
+                $cnt++
                 if ($IP_LIST -eq $first_worker)  { 
                     $IP_LIST=$worker_ip
                     echo "first_worker=$first_worker"
@@ -138,8 +140,6 @@ steps:
                    }
                 
                echo "IP_LIST=$IP_LIST"
-               echo "No.Of workers=$cnt"
-               $cnt++
          }
         Remove-Item env:\SPKEY
         Remove-Item env:\SPID
