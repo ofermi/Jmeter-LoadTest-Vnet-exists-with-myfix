@@ -113,8 +113,9 @@ steps:
         {
             $connection_Jmeter=""
             echo "Worker_name=$Worker_name"
-            Get-AzContainerInstanceLog -ContainerGroupName $Worker_name -ContainerName $ContainerName -ResourceGroupName $RG -SubscriptionId $SubscriptionId |grep 'Jmeter'| awk '{print $3}'
+            Get-AzContainerInstanceLog -ContainerGroupName $Worker_name -ContainerName $ContainerName -ResourceGroupName $RG -SubscriptionId $SubscriptionId 
             echo "Worker_name=$Worker_name"
+            $connection_Jmeter=Get-AzContainerInstanceLog -ContainerGroupName $Worker_name -ContainerName $ContainerName -ResourceGroupName $RG -SubscriptionId $SubscriptionId |grep 'Jmeter'| awk '{print $3}'
             $connection_Jmeter=Get-AzContainerInstanceLog -ContainerGroupName $Worker_name -ContainerName $ContainerName -ResourceGroupName $RG -SubscriptionId $SubscriptionId |grep 'Jmeter'| awk '{print $3}'
             echo "connection_Jmeter=$connection_Jmeter"
               if ("$connection_Jmeter" -eq $Worker_instance_name)
