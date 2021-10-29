@@ -1,1 +1,92 @@
-sasasasa
+trigger: none
+
+pool:
+  vmImage: 'ubuntu-18.04'
+
+variables:
+- group: JMETER_TERRAFORM_SETTINGS
+- name: JMETER_DIRECTORY_INPUT
+  value: $(System.DefaultWorkingDirectory)/jmeter
+- name: JMETER_DIRECTORY_OUTPUT
+  value: $(System.DefaultWorkingDirectory)/results
+- name: TERRAFORM_VERSION
+  value: 0.13.2
+
+
+
+steps:
+- task: AzureCLI@2
+  displayName: "Get Service Principal Variables"
+  inputs:
+    azureSubscription: $(AZURE_SERVICE_CONNECTION_NAME)
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      echo "##vso[task.setvariable variable=spId]$servicePrincipalId"
+      echo "##vso[task.setvariable variable=spKey]$servicePrincipalKey"
+      echo "##vso[task.setvariable variable=tid]$tenantId"
+    addSpnToEnvironment: true
+
+- task: PowerShell@2
+  displayName: "Get Worker's log "
+  inputs:
+    targetType: "inline"
+    script: |
+    
+      #    Install-Module Az -Scope CurrentUser -Force -Verbose -RequiredVersion 5.3.0
+       Install-Module -Name Az.ContainerInstance  -force
+       $credential = New-Object System.Management.Automation.PSCredential ("${env:SPID}", (ConvertTo-SecureString ${env:SPKEY} -AsPlainText -Force))
+       Connect-AzAccount -Credential $Credential -Tenant  ${env:TID} -ServicePrincipal
+       
+       $list_workers="jmete29-worker0,jmete29-worker1,jmete29-worker2,jmete29-worker3,jmete29-worker4,jmete29-worker5,jmete29-worker6"
+        
+            
+        $cnt = 1
+        $first_worker="Empty"
+        $IP_LIST="Empty"
+        foreach ($Worker_name in $list_workers.Split(","))
+        {
+         
+              $SubscriptionId= "3acbc334-72a0-4b2d-b3bb-8498810f4955"
+              $RG="jmete29"
+              $ContainerName="jmeter"
+            
+            #Get-AzContainerInstanceLog -ContainerGroupName $Worker_name -ContainerName $ContainerName -ResourceGroupName $RG -SubscriptionId $SubscriptionId
+    
+            $connection_Jmeter=Get-AzContainerInstanceLog -ContainerGroupName $Worker_name -ContainerName $ContainerName -ResourceGroupName $RG -SubscriptionId $SubscriptionId |grep 'Jmeter'| awk '{print $3}'
+            echo "connection_Jmeter=$connection_Jmeter"
+        
+            $Worker_instance_name="Jmeter"
+             if ("$connection_Jmeter" -eq $Worker_instance_name)
+              {
+                echo "Jmeter RUN on container instance $Worker_name"
+                $worker_ip= Get-AzContainerGroup -Name $Worker_name  -ResourceGroupName $RG | fl |grep IPAddressIP |awk '{print $3}'
+                echo "The $Worker_name ip=$worker_ip"
+              
+                  if ($IP_LIST -eq $first_worker)
+                  {
+                    $IP_LIST=$worker_ip
+
+                    echo "first_worker=$first_worker"
+                   }
+                   else
+                   {
+                    $IP_LIST=echo "$IP_LIST , $worker_ip"
+                   } 
+                 }
+               else
+                {
+                 echo "$Worker_name was canceled"
+                 }
+              echo "IP_LIST=$IP_LIST"
+             $cnt++
+          }
+        Remove-Item env:\SPKEY
+        Remove-Item env:\SPID
+        Remove-Item env:\TID
+    pwsh: true
+
+
+
+ 
+
