@@ -138,8 +138,8 @@ steps:
                    }
                 
                echo "IP_LIST=$IP_LIST"
-               sleep 3
                $cnt++
+               echo "No.Of workers=$cnt"
          }
         Remove-Item env:\SPKEY
         Remove-Item env:\SPID
