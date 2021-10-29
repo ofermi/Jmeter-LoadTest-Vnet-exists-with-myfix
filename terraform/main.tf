@@ -109,7 +109,7 @@ resource "azurerm_storage_share" "jmeter_share" {
 
 resource "azurerm_container_group" "jmeter_workers" {
   count               = var.JMETER_WORKERS_COUNT
-  name                = "${var.PREFIX}-worker10${count.index}"
+  name                = "${var.PREFIX}-workers${count.index}"
   resource_group_name = var.RESOURCE_GROUP_NAME
   location            = var.LOCATION
 
