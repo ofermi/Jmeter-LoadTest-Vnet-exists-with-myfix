@@ -1,6 +1,6 @@
 variable "RESOURCE_GROUP_NAME" {
   type    = string
-  default = "jmeter-resources1"
+  default = "jmeter-resources"
  #default = "jmeter"
 }
 
