@@ -100,6 +100,7 @@ steps:
        $credential = New-Object System.Management.Automation.PSCredential ("${env:SPID}", (ConvertTo-SecureString ${env:SPKEY} -AsPlainText -Force))
        Connect-AzAccount -Credential $Credential -Tenant  ${env:TID} -ServicePrincipal
        $list_workers=$(terraform output jmeter_workers_names)
+       echo "list_workers=$list_workers"
        # Defined parameters for If conditions:
         $cnt = 1
         $first_worker="Empty"
