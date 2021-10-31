@@ -20,21 +20,17 @@
         </elementProp>
         <stringProp name="ThreadGroup.num_threads">100</stringProp>
         <stringProp name="ThreadGroup.ramp_time">0</stringProp>
-        <boolProp name="ThreadGroup.scheduler">true</boolProp>
-        <stringProp name="ThreadGroup.duration">10</stringProp>
-        <stringProp name="ThreadGroup.delay">0</stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
       </ThreadGroup>
       <hashTree>
         <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
           <collectionProp name="HeaderManager.headers">
             <elementProp name="" elementType="Header">
-              <stringProp name="Header.name">Content-Type</stringProp>
-              <stringProp name="Header.value">application/json</stringProp>
-            </elementProp>
-            <elementProp name="" elementType="Header">
               <stringProp name="Header.name">Authorization</stringProp>
-              <stringProp name="Header.value">Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Imwzc1EtNTBjQ0g0eEJWWkxIVEd3blNSNzY4MCIsImtpZCI6Imwzc1EtNTBjQ0g0eEJWWkxIVEd3blNSNzY4MCJ9.eyJhdWQiOiJhcGk6Ly9hZDU5ZDU2Yy03MDUzLTRjNzctOWEwYi0wYzRhYTMwZGRiMzgiLCJpc3MiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC83ODgyMDg1Mi01NWZhLTQ1MGItOTA4ZC00NWMwZDkxMWU3NmIvIiwiaWF0IjoxNjM1NjYxNDMzLCJuYmYiOjE2MzU2NjE0MzMsImV4cCI6MTYzNTY2NTMzMywiYWlvIjoiRTJaZ1lEaDk2TzI3TXp1ZVpHUk15Y3FiY3JuREZRQT0iLCJhcHBpZCI6IjQwMWFmYjc2LTBkOWMtNDVjNi04OWIwLWNmZjg1NDE0YWQ2OCIsImFwcGlkYWNyIjoiMSIsImlkcCI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc4ODIwODUyLTU1ZmEtNDUwYi05MDhkLTQ1YzBkOTExZTc2Yi8iLCJvaWQiOiJiNjc2NTdkOC1iNTEwLTQzYjItYjIwYS1iNjY0Zjk4NmY5MzUiLCJyaCI6IjAuQVRVQVVnaUNlUHBWQzBXUWpVWEEyUkhuYTNiN0drQ2NEY1pGaWJEUC1GUVVyV2cxQUFBLiIsInJvbGVzIjpbIlVzZXJzLlVwbnMuV3JpdGUiLCJVc2Vycy5JZGVudGl0eU51bWJlci5SZWFkIiwiVXNlcnMuVXBucy5SZWFkIiwiVXNlcnMuT2lkcy5Xcml0ZSJdLCJzdWIiOiJiNjc2NTdkOC1iNTEwLTQzYjItYjIwYS1iNjY0Zjk4NmY5MzUiLCJ0aWQiOiI3ODgyMDg1Mi01NWZhLTQ1MGItOTA4ZC00NWMwZDkxMWU3NmIiLCJ1dGkiOiJyNDZqbjE4TEIwR3k3MmJUZDVJakFRIiwidmVyIjoiMS4wIn0.ATeghH9gZV00c_Ps1f-IQmaS8Jlr_zTfzQ0MgS_YVgXeO0KgWBFycy6leNLSJhvdt_ARnvvM-i4AtV2PW6oNN_wd_m1EUicrw3QWWo4ARCGQWNAGuliNeC-Mo2T1QyTcXuYg0xbvxOyde8F5lXtB0HpcnpcXsSuzSg25f38DuRUtoE8FnKw8048lFB4QZn6BT40WFJJaOXhZ0HnECdqnB-tLtJKcz9e0OUs90W0v_fBqq1dd1Kj-pRiLGEdt1JpLwz_zY6YFHvhGlUKTe5abr7lt1axWMO8QmcjJieSxwMD2TjXDkrneIdppdT1CR2uK7hiGLJfDMLo5_HxZoAfqQw</stringProp>
+              <stringProp name="Header.value">Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Imwzc1EtNTBjQ0g0eEJWWkxIVEd3blNSNzY4MCIsImtpZCI6Imwzc1EtNTBjQ0g0eEJWWkxIVEd3blNSNzY4MCJ9.eyJhdWQiOiJhcGk6Ly9hZDU5ZDU2Yy03MDUzLTRjNzctOWEwYi0wYzRhYTMwZGRiMzgiLCJpc3MiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC83ODgyMDg1Mi01NWZhLTQ1MGItOTA4ZC00NWMwZDkxMWU3NmIvIiwiaWF0IjoxNjM1NjY0OTg5LCJuYmYiOjE2MzU2NjQ5ODksImV4cCI6MTYzNTY2ODg4OSwiYWlvIjoiRTJaZ1lGZzc1OUdwcDlvVDJKS09jcXBKcisrYUF3QT0iLCJhcHBpZCI6IjQwMWFmYjc2LTBkOWMtNDVjNi04OWIwLWNmZjg1NDE0YWQ2OCIsImFwcGlkYWNyIjoiMSIsImlkcCI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc4ODIwODUyLTU1ZmEtNDUwYi05MDhkLTQ1YzBkOTExZTc2Yi8iLCJvaWQiOiJiNjc2NTdkOC1iNTEwLTQzYjItYjIwYS1iNjY0Zjk4NmY5MzUiLCJyaCI6IjAuQVRVQVVnaUNlUHBWQzBXUWpVWEEyUkhuYTNiN0drQ2NEY1pGaWJEUC1GUVVyV2cxQUFBLiIsInJvbGVzIjpbIlVzZXJzLlVwbnMuV3JpdGUiLCJVc2Vycy5JZGVudGl0eU51bWJlci5SZWFkIiwiVXNlcnMuVXBucy5SZWFkIiwiVXNlcnMuT2lkcy5Xcml0ZSJdLCJzdWIiOiJiNjc2NTdkOC1iNTEwLTQzYjItYjIwYS1iNjY0Zjk4NmY5MzUiLCJ0aWQiOiI3ODgyMDg1Mi01NWZhLTQ1MGItOTA4ZC00NWMwZDkxMWU3NmIiLCJ1dGkiOiJFM1ZaOE9zcmdVNndreTcxR0pjOEFRIiwidmVyIjoiMS4wIn0.a-O1fWVvxMzRdZ0GotKFpU4XeJ36dqq94k7v0-6ITkgcNxq9mKuhR5Mw_oPgy5v0FqKFSC1IQT9mQ8lWUGqndFrN9uTKn4l_cEzVB49nZ-tGJaZZPh4l1_TJ5RSum_8PG3hzs67EZ9LU234Wjo-GCjuii0Nwo5hY2Yx4_vWggitEwJfZhJa0EANnsUOxhSk-Nm1bs6-3zS61Zy2o2pRAZZ9X1Qrf1I9pLgtxUzi9Z12f7jze-vzQTMTUgp8-x1iw6n0W8fPdBuBonxm3C4GftEUJVuAOg8pYtLmZ4XyBgwxTd3sa24gs5kfVCrwYfyQPOSSrttitAPq3wyxNreBRmg</stringProp>
             </elementProp>
           </collectionProp>
         </HeaderManager>
